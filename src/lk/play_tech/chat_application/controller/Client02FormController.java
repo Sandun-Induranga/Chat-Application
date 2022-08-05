@@ -12,12 +12,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Client01FormController {
+public class Client02FormController {
     public ScrollPane msgContext;
     public TextField txtMessage;
     public AnchorPane context = new AnchorPane();
 
-    final int PORT = 50000;
+    final int PORT = 60000;
     Socket socket;
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
@@ -34,6 +34,7 @@ public class Client01FormController {
                 while (true){
                     dataOutputStream = new DataOutputStream(socket.getOutputStream());
                     dataInputStream = new DataInputStream(socket.getInputStream());
+
                     message = dataInputStream.readUTF();
                     System.out.println(message);
                     Platform.runLater(new Runnable() {

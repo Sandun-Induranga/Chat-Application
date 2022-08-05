@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="730.0" prefWidth="400.0" style="-fx-background-color: linear-gradient(to bottom, #85b6ff, #a1b4f7, #b5b3ee, #c3b3e4, #cdb4db);;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.play_tech.chat_application.controller.Client01FormController">
+<AnchorPane prefHeight="730.0" prefWidth="400.0" style="-fx-background-color: linear-gradient(to bottom, #85b6ff, #a1b4f7, #b5b3ee, #c3b3e4, #cdb4db);;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.play_tech.chat_application.controller.Client02FormController">
     <children>
         <ScrollPane fx:id="msgContext" layoutX="28.0" layoutY="161.0" opacity="0.4" prefHeight="430.0" prefWidth="350.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="124.0" />
         <TextField fx:id="txtMessage" layoutX="25.0" layoutY="599.0" opacity="0.4" prefHeight="44.0" prefWidth="280.0" />
