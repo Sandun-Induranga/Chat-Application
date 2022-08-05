@@ -22,6 +22,7 @@ public class Client01FormController {
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
     String message = "";
+    int i = 10;
 
     public void initialize(){
         Platform.setImplicitExit(false);
@@ -40,7 +41,9 @@ public class Client01FormController {
                         @Override
                         public void run() {
                             Label label = new Label(message);
+                            label.setLayoutY(i);
                             context.getChildren().add(label);
+                            i+=20;
                         }
                     });
                 }

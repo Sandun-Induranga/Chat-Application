@@ -32,24 +32,12 @@ public class ServerFormController {
                 dataOutputStream1 = new DataOutputStream(accept.getOutputStream());
                 dataInputStream1 = new DataInputStream(accept.getInputStream());
 
-//                dataOutputStream2 = new DataOutputStream(accept2.getOutputStream());
-//                dataInputStream2 = new DataInputStream(accept2.getInputStream());
-
-//                    dataInputStream = dataInputStream1 != null ? dataInputStream1 : dataInputStream2;
-//                    dataOutputStream = dataOutputStream1 != null ? dataOutputStream1 : dataOutputStream2;
-
                 while (!message.equals("exit")) {
                     message = dataInputStream1.readUTF();
-//                    System.out.println(accept);
-//                    System.out.println(accept2);
                     System.out.println(message);
-//                    if (message.equals("first")){
-//                        continue;
-//                    }
+
                     dataOutputStream1.writeUTF(message.trim());
                     dataOutputStream1.flush();
-//                        dataOutputStream1.flush();
-//                        dataOutputStream2.flush();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -62,27 +50,15 @@ public class ServerFormController {
                 accept2 = serverSocket2.accept();
                 System.out.println("Client 2 Connected");
 
-//                dataOutputStream1 = new DataOutputStream(accept.getOutputStream());
-//                dataInputStream1 = new DataInputStream(accept.getInputStream());
-
                 dataOutputStream2 = new DataOutputStream(accept2.getOutputStream());
                 dataInputStream2 = new DataInputStream(accept2.getInputStream());
 
-//                    dataInputStream = dataInputStream1 != null ? dataInputStream1 : dataInputStream2;
-//                    dataOutputStream = dataOutputStream1 != null ? dataOutputStream1 : dataOutputStream2;
-
                 while (!message.equals("exit")) {
                     message = dataInputStream2.readUTF();
-//                    System.out.println(accept);
-//                    System.out.println(accept2);
                     System.out.println(message);
-//                    if (message.equals("first")){
-//                        continue;
-//                    }
+
                     dataOutputStream2.writeUTF(message.trim());
                     dataOutputStream2.flush();
-//                        dataOutputStream1.flush();
-//                        dataOutputStream2.flush();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
