@@ -1,10 +1,11 @@
 package lk.play_tech.chat_application.controller;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 public class ServerFormController {
     final int PORT = 50000;
@@ -19,8 +20,7 @@ public class ServerFormController {
     DataOutputStream dataOutputStream1;
     DataInputStream dataInputStream2;
     DataOutputStream dataOutputStream2;
-    String message = "none";
-    String message2 = "";
+    String message = "";
 
     public void initialize() {
         new Thread(() -> {
@@ -33,11 +33,22 @@ public class ServerFormController {
                 dataInputStream1 = new DataInputStream(accept.getInputStream());
 
                 while (!message.equals("exit")) {
-                    message = dataInputStream1.readUTF();
+                    message = "Client 1 : " + dataInputStream1.readUTF();
                     System.out.println(message);
+                    BufferedImage image = ImageIO.read(new File("/home/sandu/Pictures/Screenshots/Screenshot from 2022-07-19 20-43-10.png"));
 
-                    dataOutputStream1.writeUTF(message.trim());
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    ImageIO.write(image, "png", byteArrayOutputStream);
+
+                    byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+                    dataOutputStream1.write(size);
+                    dataOutputStream1.write(byteArrayOutputStream.toByteArray());
                     dataOutputStream1.flush();
+
+//                    dataOutputStream1.writeUTF(message.trim());
+//                    dataOutputStream2.writeUTF(message.trim());
+//                    dataOutputStream1.flush();
+//                    dataOutputStream2.flush();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -54,10 +65,12 @@ public class ServerFormController {
                 dataInputStream2 = new DataInputStream(accept2.getInputStream());
 
                 while (!message.equals("exit")) {
-                    message = dataInputStream2.readUTF();
+                    message = "Client 2 : " + dataInputStream2.readUTF();
                     System.out.println(message);
 
+                    dataOutputStream1.writeUTF(message.trim());
                     dataOutputStream2.writeUTF(message.trim());
+                    dataOutputStream1.flush();
                     dataOutputStream2.flush();
                 }
             } catch (IOException e) {
