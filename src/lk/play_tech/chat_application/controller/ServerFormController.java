@@ -19,20 +19,38 @@ public class ServerFormController {
     DataOutputStream dataOutputStream1;
     DataInputStream dataInputStream2;
     DataOutputStream dataOutputStream2;
-    String message = "";
+    String message = "none";
     String message2 = "";
 
     public void initialize() {
         new Thread(() -> {
             try {
                 serverSocket = new ServerSocket(PORT);
-                serverSocket2 = new ServerSocket(PORT2);
                 System.out.println("Server Started..");
                 accept = serverSocket.accept();
                 System.out.println("Client 1 Connected");
-                // TODO: 2022-08-05
-                accept2 = serverSocket2.accept();
-                System.out.println("Client 2 Connected");
+                dataOutputStream1 = new DataOutputStream(accept.getOutputStream());
+                dataInputStream1 = new DataInputStream(accept.getInputStream());
+
+//                dataOutputStream2 = new DataOutputStream(accept2.getOutputStream());
+//                dataInputStream2 = new DataInputStream(accept2.getInputStream());
+
+//                    dataInputStream = dataInputStream1 != null ? dataInputStream1 : dataInputStream2;
+//                    dataOutputStream = dataOutputStream1 != null ? dataOutputStream1 : dataOutputStream2;
+
+                while (!message.equals("exit")) {
+                    message = dataInputStream1.readUTF();
+//                    System.out.println(accept);
+//                    System.out.println(accept2);
+                    System.out.println(message);
+//                    if (message.equals("first")){
+//                        continue;
+//                    }
+                    dataOutputStream1.writeUTF(message.trim());
+                    dataOutputStream1.flush();
+//                        dataOutputStream1.flush();
+//                        dataOutputStream2.flush();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -40,24 +58,31 @@ public class ServerFormController {
         }).start();
         new Thread(() -> {
             try {
-                dataOutputStream1 = accept != null ? new DataOutputStream(accept.getOutputStream()) : null;
-                dataInputStream1 = accept != null ? new DataInputStream(accept.getInputStream()) : null;
+                serverSocket2 = new ServerSocket(PORT2);
+                accept2 = serverSocket2.accept();
+                System.out.println("Client 2 Connected");
 
-                dataOutputStream2 = accept2 != null ? new DataOutputStream(accept2.getOutputStream()) : null;
-                dataInputStream2 = accept2 != null ? new DataInputStream(accept2.getInputStream()) : null;
+//                dataOutputStream1 = new DataOutputStream(accept.getOutputStream());
+//                dataInputStream1 = new DataInputStream(accept.getInputStream());
 
-                dataInputStream = dataInputStream1 != null ? dataInputStream1 : dataInputStream2;
-                dataOutputStream = dataOutputStream1 != null ? dataOutputStream1 : dataOutputStream2;
+                dataOutputStream2 = new DataOutputStream(accept2.getOutputStream());
+                dataInputStream2 = new DataInputStream(accept2.getInputStream());
 
-                while (true) {
-                    message = dataInputStream.readUTF();
+//                    dataInputStream = dataInputStream1 != null ? dataInputStream1 : dataInputStream2;
+//                    dataOutputStream = dataOutputStream1 != null ? dataOutputStream1 : dataOutputStream2;
+
+                while (!message.equals("exit")) {
+                    message = dataInputStream2.readUTF();
+//                    System.out.println(accept);
+//                    System.out.println(accept2);
                     System.out.println(message);
-                    dataOutputStream.writeUTF(message.trim());
-                    dataOutputStream.flush();
-                    dataOutputStream1.flush();
+//                    if (message.equals("first")){
+//                        continue;
+//                    }
+                    dataOutputStream2.writeUTF(message.trim());
                     dataOutputStream2.flush();
-                    dataInputStream1 = null;
-                    dataOutputStream2 = null;
+//                        dataOutputStream1.flush();
+//                        dataOutputStream2.flush();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
