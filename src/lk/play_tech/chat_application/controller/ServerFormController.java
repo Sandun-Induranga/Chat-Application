@@ -21,6 +21,12 @@ public class ServerFormController {
                 System.out.println("Server Started..");
                 accept = serverSocket.accept();
                 System.out.println("Client Connected");
+
+                dataOutputStream = new DataOutputStream(accept.getOutputStream());
+                dataInputStream = new DataInputStream(accept.getInputStream());
+
+                dataOutputStream.writeUTF("Message".trim());
+                dataOutputStream.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }
