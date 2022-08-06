@@ -1,6 +1,8 @@
 package lk.play_tech.chat_application.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -28,6 +30,7 @@ public class ServerFormController {
     Socket accept1;
     Socket accept2;
     Socket accept3;
+    Socket socket;
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
     DataInputStream dataInputStream1;
@@ -39,17 +42,19 @@ public class ServerFormController {
     String message = "";
 
     public void initialize() {
+        Platform.setImplicitExit(false);
+//        msgContext.setContent(context);
         new Thread(() -> {
             try {
-                serverSocket = new ServerSocket(PORT);
-                accept = serverSocket.accept();
-                System.out.println("Server Started");
-
-                dataOutputStream = new DataOutputStream(accept.getOutputStream());
-                dataInputStream = new DataInputStream(accept.getInputStream());
-
                 while (true) {
-                    message = "Client 3 : " + dataInputStream3.readUTF();
+                    serverSocket = new ServerSocket(PORT);
+                    accept = serverSocket.accept();
+                    System.out.println("Server Started");
+
+                    dataOutputStream = new DataOutputStream(accept.getOutputStream());
+                    dataInputStream = new DataInputStream(accept.getInputStream());
+
+                    message = "Client 3 : " + dataInputStream.readUTF();
                     System.out.println(message);
 
                     if (message.equals("Client 3 : exit")) {
@@ -74,6 +79,32 @@ public class ServerFormController {
                         dataOutputStream3.flush();
                     }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        new Thread(() -> {
+            try {
+                socket = new Socket("localhost",PORT);
+
+                while (true){
+                    dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                    dataInputStream = new DataInputStream(socket.getInputStream());
+
+                    message = dataInputStream.readUTF();
+                    System.out.println(message);
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+//                            Label label = new Label(message);
+//                            label.setLayoutY(i);
+//                            context.getChildren().add(label);
+//                            i+=20;
+                        }
+                    });
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
