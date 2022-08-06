@@ -56,10 +56,19 @@ public class ServerFormController {
                     message = "Client 1 : " + dataInputStream1.readUTF();
                     System.out.println(message);
 
-                    dataOutputStream1.writeUTF(message.trim());
-                    dataOutputStream2.writeUTF(message.trim());
-                    dataOutputStream1.flush();
-                    dataOutputStream2.flush();
+                    if (message.equals("Client 1 : exit")) {
+                        accept = null;
+                        return;
+                    }
+
+                    if (accept != null) {
+                        dataOutputStream1.writeUTF(message.trim());
+                        dataOutputStream1.flush();
+                    }
+                    if (accept2 != null) {
+                        dataOutputStream2.writeUTF(message.trim());
+                        dataOutputStream2.flush();
+                    }
                     if (accept3 != null) {
                         dataOutputStream3.writeUTF(message.trim());
                         dataOutputStream3.flush();
@@ -85,10 +94,19 @@ public class ServerFormController {
                     message = "Client 2 : " + dataInputStream2.readUTF();
                     System.out.println(message);
 
-                    dataOutputStream1.writeUTF(message.trim());
-                    dataOutputStream2.writeUTF(message.trim());
-                    dataOutputStream1.flush();
-                    dataOutputStream2.flush();
+                    if (message.equals("Client 2 : exit")) {
+                        accept2 = null;
+                        return;
+                    }
+
+                    if (accept != null) {
+                        dataOutputStream1.writeUTF(message.trim());
+                        dataOutputStream1.flush();
+                    }
+                    if (accept2 != null) {
+                        dataOutputStream2.writeUTF(message.trim());
+                        dataOutputStream2.flush();
+                    }
                     if (accept3 != null) {
                         dataOutputStream3.writeUTF(message.trim());
                         dataOutputStream3.flush();
@@ -116,12 +134,18 @@ public class ServerFormController {
                         return;
                     }
 
-                    dataOutputStream1.writeUTF(message.trim());
-                    dataOutputStream2.writeUTF(message.trim());
-                    dataOutputStream3.writeUTF(message.trim());
-                    dataOutputStream1.flush();
-                    dataOutputStream2.flush();
-                    dataOutputStream3.flush();
+                    if (accept != null) {
+                        dataOutputStream1.writeUTF(message.trim());
+                        dataOutputStream1.flush();
+                    }
+                    if (accept2 != null) {
+                        dataOutputStream2.writeUTF(message.trim());
+                        dataOutputStream2.flush();
+                    }
+                    if (accept3 != null) {
+                        dataOutputStream3.writeUTF(message.trim());
+                        dataOutputStream3.flush();
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();

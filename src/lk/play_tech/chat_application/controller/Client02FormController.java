@@ -63,5 +63,6 @@ public class Client02FormController {
     public void btnExitOnAction(ActionEvent actionEvent) throws IOException {
         dataOutputStream.writeUTF("exit".trim());
         dataOutputStream.flush();
+        System.exit(0);
     }
 }

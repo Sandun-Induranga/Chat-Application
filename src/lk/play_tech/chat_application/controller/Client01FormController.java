@@ -110,9 +110,9 @@ public class Client01FormController {
 
     public void btnImageChooserOnAction(ActionEvent actionEvent) throws IOException {
         // get the file selected
-        FileChooser fil_chooser = new FileChooser();
+        FileChooser chooser = new FileChooser();
         Stage stage = new Stage();
-        File file = fil_chooser.showOpenDialog(stage);
+        File file = chooser.showOpenDialog(stage);
 
         if (file != null) {
 //            dataOutputStream.writeUTF(file.getPath());
@@ -126,5 +126,6 @@ public class Client01FormController {
     public void btnExitOnAction(ActionEvent actionEvent) throws IOException {
         dataOutputStream.writeUTF("exit".trim());
         dataOutputStream.flush();
+        System.exit(0);
     }
 }
