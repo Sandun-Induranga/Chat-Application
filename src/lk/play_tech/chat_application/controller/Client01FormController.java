@@ -1,13 +1,10 @@
 package lk.play_tech.chat_application.controller;
 
 import javafx.application.Platform;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -30,12 +27,17 @@ public class Client01FormController {
     BufferedReader bufferedReader;
     String message = "";
     int i = 10;
+    String path = "";
+    public static boolean isImageChoose = false;
+    ObjectOutputStream oos;
+    ObjectInputStream ois;
 
     public void initialize() {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
 
         new Thread(() -> {
+
             try {
                 socket = new Socket("localhost", PORT);
 
@@ -43,6 +45,8 @@ public class Client01FormController {
                     dataOutputStream = new DataOutputStream(socket.getOutputStream());
                     dataInputStream = new DataInputStream(socket.getInputStream());
                     message = dataInputStream.readUTF();
+                    System.out.println(message);
+
 //                    BufferedImage image = ImageIO.read(new File(dataInputStream.readUTF()));
 //
 //                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -87,6 +91,19 @@ public class Client01FormController {
     }
 
     public void btnSendOnAction(ActionEvent actionEvent) throws IOException {
+//        if (isImageChoose){
+////            BufferedImage image = ImageIO.read(new File(path));
+////
+////            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+////            ImageIO.write(image, "png", byteArrayOutputStream);
+////
+////            byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+////            dataOutputStream.write(size);
+////            dataOutputStream.write(byteArrayOutputStream.toByteArray());
+////            dataOutputStream.flush();
+//        }else {
+//
+//        }
         dataOutputStream.writeUTF(txtMessage.getText().trim());
         dataOutputStream.flush();
     }
@@ -98,9 +115,11 @@ public class Client01FormController {
         File file = fil_chooser.showOpenDialog(stage);
 
         if (file != null) {
-            dataOutputStream.writeUTF(file.getPath());
+//            dataOutputStream.writeUTF(file.getPath());
+            path = file.getPath();
             System.out.println("selected");
             System.out.println(file.getPath());
+            isImageChoose = true;
         }
     }
 }

@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.sql.Array;
 
 public class ServerFormController {
     final int PORT = 50000;
@@ -28,30 +29,37 @@ public class ServerFormController {
         new Thread(() -> {
             try {
                 serverSocket = new ServerSocket(PORT);
-                System.out.println("Server Started..");
                 accept = serverSocket.accept();
                 System.out.println("Client 1 Connected");
+
                 dataOutputStream1 = new DataOutputStream(accept.getOutputStream());
                 dataInputStream1 = new DataInputStream(accept.getInputStream());
+//                double d = Double.parseDouble(dataInputStream1.readUTF());
+//                BufferedImage image = ImageIO.read(new File(dataInputStream1.readUTF()));
+//
+//                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//                ImageIO.write(image, "png", byteArrayOutputStream);
+//
+//                byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+//                dataOutputStream1.write(size);
+//                dataOutputStream1.write(byteArrayOutputStream.toByteArray());
+////                        dataOutputStream1.flush();
+//                dataOutputStream2.write(size);
+//                dataOutputStream2.write(byteArrayOutputStream.toByteArray());
+////                        dataOutputStream2.flush();
+//                dataOutputStream1.flush();
 
                 while (!message.equals("exit")) {
                     message = "Client 1 : " + dataInputStream1.readUTF();
                     System.out.println(message);
-//                    BufferedImage image = ImageIO.read(new File("/home/sandu/Pictures/Screenshots/Screenshot from 2022-07-19 20-43-10.png"));
-
-//                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//                    ImageIO.write(image, "png", byteArrayOutputStream);
-
-//                    byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-//                    dataOutputStream1.write(size);
-//                    dataOutputStream1.write(byteArrayOutputStream.toByteArray());
-//                    dataOutputStream1.flush();
 
                     dataOutputStream1.writeUTF(message.trim());
                     dataOutputStream2.writeUTF(message.trim());
                     dataOutputStream1.flush();
                     dataOutputStream2.flush();
                 }
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
