@@ -122,4 +122,9 @@ public class Client01FormController {
             isImageChoose = true;
         }
     }
+
+    public void btnExitOnAction(ActionEvent actionEvent) throws IOException {
+        dataOutputStream.writeUTF("exit".trim());
+        dataOutputStream.flush();
+    }
 }

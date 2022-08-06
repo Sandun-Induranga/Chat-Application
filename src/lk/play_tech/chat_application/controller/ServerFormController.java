@@ -20,12 +20,12 @@ public class ServerFormController {
     Socket accept;
     Socket accept2;
     Socket accept3;
-    DataInputStream dataInputStream3;
-    DataOutputStream dataOutputStream3;
     DataInputStream dataInputStream1;
     DataOutputStream dataOutputStream1;
     DataInputStream dataInputStream2;
     DataOutputStream dataOutputStream2;
+    DataInputStream dataInputStream3;
+    DataOutputStream dataOutputStream3;
     String message = "";
 
     public void initialize() {
@@ -60,6 +60,10 @@ public class ServerFormController {
                     dataOutputStream2.writeUTF(message.trim());
                     dataOutputStream1.flush();
                     dataOutputStream2.flush();
+                    if (accept3 != null) {
+                        dataOutputStream3.writeUTF(message.trim());
+                        dataOutputStream3.flush();
+                    }
                 }
 
 
@@ -85,6 +89,10 @@ public class ServerFormController {
                     dataOutputStream2.writeUTF(message.trim());
                     dataOutputStream1.flush();
                     dataOutputStream2.flush();
+                    if (accept3 != null) {
+                        dataOutputStream3.writeUTF(message.trim());
+                        dataOutputStream3.flush();
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -99,14 +107,21 @@ public class ServerFormController {
                 dataOutputStream3 = new DataOutputStream(accept3.getOutputStream());
                 dataInputStream3 = new DataInputStream(accept3.getInputStream());
 
-                while (!message.equals("exit")) {
+                while (true) {
                     message = "Client 3 : " + dataInputStream3.readUTF();
                     System.out.println(message);
 
+                    if (message.equals("Client 3 : exit")) {
+                        accept3 = null;
+                        return;
+                    }
+
                     dataOutputStream1.writeUTF(message.trim());
                     dataOutputStream2.writeUTF(message.trim());
+                    dataOutputStream3.writeUTF(message.trim());
                     dataOutputStream1.flush();
                     dataOutputStream2.flush();
+                    dataOutputStream3.flush();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
