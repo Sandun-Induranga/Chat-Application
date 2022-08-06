@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 
 import javax.imageio.ImageIO;
@@ -33,6 +34,8 @@ public class ServerFormController {
     Socket socket;
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
+    DataInputStream dataInputStream0;
+    DataOutputStream dataOutputStream0;
     DataInputStream dataInputStream1;
     DataOutputStream dataOutputStream1;
     DataInputStream dataInputStream2;
@@ -40,24 +43,25 @@ public class ServerFormController {
     DataInputStream dataInputStream3;
     DataOutputStream dataOutputStream3;
     String message = "";
+    int i = 0;
+    public AnchorPane context = new AnchorPane();
 
     public void initialize() {
         Platform.setImplicitExit(false);
-//        msgContext.setContent(context);
+        msgContext.setContent(context);
         new Thread(() -> {
             try {
+                serverSocket = new ServerSocket(PORT);
+                accept = serverSocket.accept();
+                System.out.println("Server Started");
                 while (true) {
-                    serverSocket = new ServerSocket(PORT);
-                    accept = serverSocket.accept();
-                    System.out.println("Server Started");
-
                     dataOutputStream = new DataOutputStream(accept.getOutputStream());
                     dataInputStream = new DataInputStream(accept.getInputStream());
 
-                    message = "Client 3 : " + dataInputStream.readUTF();
+                    message = "Server : " + dataInputStream.readUTF();
                     System.out.println(message);
 
-                    if (message.equals("Client 3 : exit")) {
+                    if (message.equals("Server : exit")) {
                         accept = null;
                         return;
                     }
@@ -89,18 +93,18 @@ public class ServerFormController {
                 socket = new Socket("localhost",PORT);
 
                 while (true){
-                    dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                    dataInputStream = new DataInputStream(socket.getInputStream());
+                    dataOutputStream0 = new DataOutputStream(socket.getOutputStream());
+                    dataInputStream0 = new DataInputStream(socket.getInputStream());
 
-                    message = dataInputStream.readUTF();
+                    message = dataInputStream0.readUTF();
                     System.out.println(message);
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-//                            Label label = new Label(message);
-//                            label.setLayoutY(i);
-//                            context.getChildren().add(label);
-//                            i+=20;
+                            Label label = new Label(message);
+                            label.setLayoutY(i);
+                            context.getChildren().add(label);
+                            i+=20;
                         }
                     });
                 }
@@ -244,8 +248,10 @@ public class ServerFormController {
     }
 
     public void btnSendOnAction(ActionEvent actionEvent) throws IOException {
-        dataOutputStream.writeUTF(txtMessage.getText().trim());
-        dataOutputStream.flush();
+//        dataOutputStream.writeUTF(txtMessage.getText().trim());
+//        dataOutputStream.flush();
+        dataOutputStream0.writeUTF(txtMessage.getText().trim());
+        dataOutputStream0.flush();
     }
 
     public void btnImageChooserOnAction(ActionEvent actionEvent) {
