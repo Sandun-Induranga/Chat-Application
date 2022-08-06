@@ -13,12 +13,15 @@ import java.sql.Array;
 public class ServerFormController {
     final int PORT = 50000;
     final int PORT2 = 60000;
+    final int PORT3 = 65000;
     ServerSocket serverSocket;
     ServerSocket serverSocket2;
+    ServerSocket serverSocket3;
     Socket accept;
     Socket accept2;
-    DataInputStream dataInputStream;
-    DataOutputStream dataOutputStream;
+    Socket accept3;
+    DataInputStream dataInputStream3;
+    DataOutputStream dataOutputStream3;
     DataInputStream dataInputStream1;
     DataOutputStream dataOutputStream1;
     DataInputStream dataInputStream2;
@@ -76,6 +79,28 @@ public class ServerFormController {
 
                 while (!message.equals("exit")) {
                     message = "Client 2 : " + dataInputStream2.readUTF();
+                    System.out.println(message);
+
+                    dataOutputStream1.writeUTF(message.trim());
+                    dataOutputStream2.writeUTF(message.trim());
+                    dataOutputStream1.flush();
+                    dataOutputStream2.flush();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        new Thread(() -> {
+            try {
+                serverSocket3 = new ServerSocket(PORT3);
+                accept3 = serverSocket3.accept();
+                System.out.println("Client 3 Connected");
+
+                dataOutputStream3 = new DataOutputStream(accept3.getOutputStream());
+                dataInputStream3 = new DataInputStream(accept3.getInputStream());
+
+                while (!message.equals("exit")) {
+                    message = "Client 3 : " + dataInputStream3.readUTF();
                     System.out.println(message);
 
                     dataOutputStream1.writeUTF(message.trim());
