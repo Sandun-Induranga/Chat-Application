@@ -9,13 +9,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
@@ -28,44 +27,55 @@ public class Client01FormController {
     Socket socket;
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
+    BufferedReader bufferedReader;
     String message = "";
     int i = 10;
 
-    public void initialize(){
+    public void initialize() {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
 
         new Thread(() -> {
             try {
-                socket = new Socket("localhost",PORT);
+                socket = new Socket("localhost", PORT);
 
-                while (true){
+                while (true) {
                     dataOutputStream = new DataOutputStream(socket.getOutputStream());
                     dataInputStream = new DataInputStream(socket.getInputStream());
-//                    message = dataInputStream.readUTF();
-//                    System.out.println(message);
-                    byte[] sizeAr = new byte[4];
-                    dataInputStream.read(sizeAr);
-                    int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+                    message = dataInputStream.readUTF();
+//                    BufferedImage image = ImageIO.read(new File(dataInputStream.readUTF()));
+//
+//                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//                    ImageIO.write(image, "png", byteArrayOutputStream);
+//
+//                    byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+//                    dataOutputStream.write(size);
+//                    dataOutputStream.write(byteArrayOutputStream.toByteArray());
+//                    dataOutputStream.flush();
 
-                    byte[] imageAr = new byte[size];
-                    dataInputStream.read(imageAr);
 
-                    BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
-
-                    System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+//                    byte[] sizeAr = new byte[4];
+//                    dataInputStream.read(sizeAr);
+//                    int sizeg = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+//
+//                    byte[] imageAr = new byte[sizeg];
+//                    dataInputStream.read(imageAr);
+//
+//                    BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageAr));
+//
+//                    System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-//                            Label label = new Label(message);
-//                            label.setLayoutY(i);
-//                            context.getChildren().add(label);
-                            Image img = SwingFXUtils.toFXImage(image, null);
-                            ImageView imageView = new ImageView(img);
-                            imageView.setFitHeight(150);
-                            imageView.setFitWidth(150);
-                            context.getChildren().add(imageView);
-                            i+=20;
+                            Label label = new Label(message);
+                            label.setLayoutY(i);
+                            context.getChildren().add(label);
+//                            Image img = SwingFXUtils.toFXImage(image, null);
+//                            ImageView imageView = new ImageView(img);
+//                            imageView.setFitHeight(150);
+//                            imageView.setFitWidth(150);
+//                            context.getChildren().add(imageView);
+                            i += 20;
                         }
                     });
                 }
@@ -79,5 +89,18 @@ public class Client01FormController {
     public void btnSendOnAction(ActionEvent actionEvent) throws IOException {
         dataOutputStream.writeUTF(txtMessage.getText().trim());
         dataOutputStream.flush();
+    }
+
+    public void btnImageChooserOnAction(ActionEvent actionEvent) throws IOException {
+        // get the file selected
+        FileChooser fil_chooser = new FileChooser();
+        Stage stage = new Stage();
+        File file = fil_chooser.showOpenDialog(stage);
+
+        if (file != null) {
+            dataOutputStream.writeUTF(file.getPath());
+            System.out.println("selected");
+            System.out.println(file.getPath());
+        }
     }
 }

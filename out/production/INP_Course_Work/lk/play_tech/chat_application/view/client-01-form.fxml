@@ -12,5 +12,6 @@
       <TextField fx:id="txtMessage" layoutX="25.0" layoutY="599.0" opacity="0.4" prefHeight="44.0" prefWidth="280.0" />
       <Button layoutX="324.0" layoutY="608.0" mnemonicParsing="false" onAction="#btnSendOnAction" text="Send" />
       <Label layoutX="171.0" layoutY="59.0" text="Client 01" />
+      <Button layoutX="212.0" layoutY="658.0" mnemonicParsing="false" onAction="#btnImageChooserOnAction" text="Send" />
    </children>
 </AnchorPane>

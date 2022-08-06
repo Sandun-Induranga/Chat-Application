@@ -1,5 +1,7 @@
 package lk.play_tech.chat_application.controller;
 
+import javafx.stage.FileChooser;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -35,20 +37,20 @@ public class ServerFormController {
                 while (!message.equals("exit")) {
                     message = "Client 1 : " + dataInputStream1.readUTF();
                     System.out.println(message);
-                    BufferedImage image = ImageIO.read(new File("/home/sandu/Pictures/Screenshots/Screenshot from 2022-07-19 20-43-10.png"));
+//                    BufferedImage image = ImageIO.read(new File("/home/sandu/Pictures/Screenshots/Screenshot from 2022-07-19 20-43-10.png"));
 
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    ImageIO.write(image, "png", byteArrayOutputStream);
+//                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//                    ImageIO.write(image, "png", byteArrayOutputStream);
 
-                    byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-                    dataOutputStream1.write(size);
-                    dataOutputStream1.write(byteArrayOutputStream.toByteArray());
-                    dataOutputStream1.flush();
-
-//                    dataOutputStream1.writeUTF(message.trim());
-//                    dataOutputStream2.writeUTF(message.trim());
+//                    byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+//                    dataOutputStream1.write(size);
+//                    dataOutputStream1.write(byteArrayOutputStream.toByteArray());
 //                    dataOutputStream1.flush();
-//                    dataOutputStream2.flush();
+
+                    dataOutputStream1.writeUTF(message.trim());
+                    dataOutputStream2.writeUTF(message.trim());
+                    dataOutputStream1.flush();
+                    dataOutputStream2.flush();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
