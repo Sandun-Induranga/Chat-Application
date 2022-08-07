@@ -50,7 +50,6 @@ public class ServerFormController {
     String message = "";
     int i = 0;
     public AnchorPane context = new AnchorPane();
-    private Image image;
 
     public void initialize() {
         Platform.setImplicitExit(false);
@@ -258,6 +257,35 @@ public class ServerFormController {
                         dataOutputStream3.writeUTF(message.trim());
                         dataOutputStream3.flush();
                     }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        new Thread(() -> {
+            try {
+                while (true){
+                    ServerSocket imageSocket = new ServerSocket(13085);
+                    Socket imgSocket = imageSocket.accept();
+                    InputStream imgInputStream = imgSocket.getInputStream();
+                    System.out.println("Reading: " + System.currentTimeMillis());
+
+                    byte[] sizeAr = new byte[4];
+                    imgInputStream.read(sizeAr);
+                    int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+
+                    byte[] imageAr = new byte[size];
+                    imgInputStream.read(imageAr);
+
+                    BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
+
+                    System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+                    ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
+
+                    imageSocket.close();
+                    imgSocket.close();
+                    imageSocket = null;
+                    imageSocket=null;
                 }
             } catch (IOException e) {
                 e.printStackTrace();

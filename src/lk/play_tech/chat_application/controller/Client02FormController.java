@@ -7,10 +7,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 public class Client02FormController {
     public ScrollPane msgContext;
@@ -64,5 +65,23 @@ public class Client02FormController {
         dataOutputStream.writeUTF("exit".trim());
         dataOutputStream.flush();
         System.exit(0);
+    }
+
+    public void btnOnAction(ActionEvent actionEvent) throws IOException {
+        Socket imgSocket = new Socket("localhost", 13085);
+        OutputStream outputStream = imgSocket.getOutputStream();
+
+        BufferedImage image = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageIO.write(image, "jpg", byteArrayOutputStream);
+
+        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+        outputStream.write(size);
+        outputStream.write(byteArrayOutputStream.toByteArray());
+        outputStream.flush();
+        System.out.println("Flushed: " + System.currentTimeMillis());
+        System.out.println("Closing: " + System.currentTimeMillis());
+        imgSocket.close();
     }
 }

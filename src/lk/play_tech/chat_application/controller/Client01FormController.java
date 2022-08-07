@@ -30,9 +30,6 @@ public class Client01FormController {
     Socket socket;
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
-    ImageInputStream imageInputStream;
-    ImageOutputStream imageOutputStream;
-    BufferedReader bufferedReader;
     String message = "";
     int i = 10;
     String path = "";
@@ -139,43 +136,20 @@ public class Client01FormController {
     }
 
     public void btnOnAction(ActionEvent actionEvent) throws IOException {
-        BufferedImage image = ImageIO.read(new File(path));
+        Socket imgSocket = new Socket("localhost", 13085);
+        OutputStream outputStream = imgSocket.getOutputStream();
+
+        BufferedImage image = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", byteArrayOutputStream);
-        byteArrayOutputStream.flush();
+        ImageIO.write(image, "jpg", byteArrayOutputStream);
 
-        if (file != null) {
-
-//            sendingobject(file.getName(), true, file);
-
-//            try {
-//                Socket socket = null;
-//
-//                socket = new Socket("localhost", 4444);
-//
-//                // Get the size of the file
-//                long length = file.length();
-//                byte[] bytes = new byte[(int) length];
-//                InputStream in = new FileInputStream(file);
-//                OutputStream out = socket.getOutputStream();
-//
-//                int count;
-//                while ((count = in.read(bytes)) > 0) {
-//                    out.write(bytes, 0, count);
-//                }
-//                out.close();
-//                in.close();
-//                socket.close();
-//
-//            } catch (IOException e) {
-//                System.out.println(e.getMessage());
-//            }
-        }
-
-//        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-//        dataOutputStream.write(size);
-//        dataOutputStream.write(byteArrayOutputStream.toByteArray());
-//        dataOutputStream.flush();
+        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+        outputStream.write(size);
+        outputStream.write(byteArrayOutputStream.toByteArray());
+        outputStream.flush();
+        System.out.println("Flushed: " + System.currentTimeMillis());
+        System.out.println("Closing: " + System.currentTimeMillis());
+        imgSocket.close();
     }
 }
