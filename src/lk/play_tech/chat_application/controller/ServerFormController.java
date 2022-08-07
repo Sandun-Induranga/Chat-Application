@@ -26,6 +26,9 @@ public class ServerFormController {
     final int PORT1 = 50000;
     final int PORT2 = 60000;
     final int PORT3 = 65000;
+    final int PORT11 = 51000;
+    final int PORT22 = 62000;
+    final int PORT33 = 63000;
     public ScrollPane msgContext;
     public TextField txtMessage;
     ServerSocket serverSocket;
@@ -34,17 +37,31 @@ public class ServerFormController {
     Socket accept1;
     Socket accept2;
     Socket accept3;
+    Socket acceptImg;
+    Socket accept1Img;
+    Socket accept2Img;
+    Socket accept3Img;
     Socket socket;
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
+    InputStream imgInputStream;
+    OutputStream imgOutputStream;
     DataInputStream dataInputStream0;
     DataOutputStream dataOutputStream0;
+    InputStream imgInputStream0;
+    OutputStream imgOutputStream0;
     DataInputStream dataInputStream1;
     DataOutputStream dataOutputStream1;
+    InputStream imgInputStream1;
+    OutputStream imgOutputStream1;
     DataInputStream dataInputStream2;
     DataOutputStream dataOutputStream2;
+    InputStream imgInputStream2;
+    OutputStream imgOutputStream2;
     DataInputStream dataInputStream3;
     DataOutputStream dataOutputStream3;
+    InputStream imgInputStream3;
+    OutputStream imgOutputStream3;
     String message = "";
     int i = 0;
     public AnchorPane context = new AnchorPane();
@@ -104,9 +121,14 @@ public class ServerFormController {
         new Thread(() -> {
             try {
                 accept1 = acceptConnection(PORT1);
+                accept1Img = acceptConnection(PORT11);
+                System.out.println("Client 1 Connected");
 
                 dataOutputStream1 = new DataOutputStream(accept1.getOutputStream());
                 dataInputStream1 = new DataInputStream(accept1.getInputStream());
+
+                imgInputStream1 = accept1Img.getInputStream();
+                imgOutputStream1 = accept1Img.getOutputStream();
 
                 while (!message.equals("exit")) {
                     message = "Client 1 : " + dataInputStream1.readUTF();
@@ -128,9 +150,14 @@ public class ServerFormController {
         new Thread(() -> {
             try {
                 accept2 = acceptConnection(PORT2);
+                accept2Img = acceptConnection(PORT22);
+                System.out.println("Client 1 Connected");
 
                 dataOutputStream2 = new DataOutputStream(accept2.getOutputStream());
                 dataInputStream2 = new DataInputStream(accept2.getInputStream());
+
+                imgOutputStream2 = accept2.getOutputStream();
+                imgInputStream2 = accept2.getInputStream();
 
                 while (!message.equals("exit")) {
                     message = "Client 2 : " + dataInputStream2.readUTF();
@@ -149,9 +176,13 @@ public class ServerFormController {
         new Thread(() -> {
             try {
                 accept3 = acceptConnection(PORT3);
+                accept3Img = acceptConnection(PORT33);
 
                 dataOutputStream3 = new DataOutputStream(accept3.getOutputStream());
                 dataInputStream3 = new DataInputStream(accept3.getInputStream());
+
+                imgOutputStream3 = accept3.getOutputStream();
+                imgInputStream3 = accept3.getInputStream();
 
                 while (true) {
                     message = "Client 3 : " + dataInputStream3.readUTF();
@@ -212,7 +243,6 @@ public class ServerFormController {
 
     private Socket acceptConnection(int port) throws IOException {
         serverSocket1 = new ServerSocket(port);
-        System.out.println("Client 1 Connected");
         return serverSocket1.accept();
     }
 
