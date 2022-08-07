@@ -11,12 +11,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.sql.Array;
+import java.util.Arrays;
 import java.util.zip.DataFormatException;
 
 public class ServerFormController {
@@ -45,8 +47,6 @@ public class ServerFormController {
     DataOutputStream dataOutputStream2;
     DataInputStream dataInputStream3;
     DataOutputStream dataOutputStream3;
-    ByteArrayInputStream byteArrayInputStream;
-    ByteArrayOutputStream byteArrayOutputStream;
     String message = "";
     int i = 0;
     public AnchorPane context = new AnchorPane();
@@ -128,10 +128,20 @@ public class ServerFormController {
                 dataOutputStream1 = new DataOutputStream(accept1.getOutputStream());
                 dataInputStream1 = new DataInputStream(accept1.getInputStream());
 
-//                double d = Double.parseDouble(dataInputStream1.readUTF());
-
                 while (!message.equals("exit")) {
-                    try {
+//                    if (dataInputStream1 instanceof ImageInputStream){
+//                        BufferedImage image = ImageIO.read(new File(dataInputStream1.readUTF()));
+//                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//                        ImageIO.write(image, "png", byteArrayOutputStream);
+//
+//                        System.out.println("done");
+//
+//                        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+//                        dataOutputStream1.write(size);
+//                        System.out.println(Arrays.toString(size));
+//                        dataOutputStream1.write(byteArrayOutputStream.toByteArray());
+//                        dataOutputStream1.flush();
+//                    }else {
                         message = "Client 1 : " + dataInputStream1.readUTF();
                         System.out.println(message);
                         String typeName = dataInputStream1.getClass().getTypeName();
@@ -158,17 +168,16 @@ public class ServerFormController {
                             dataOutputStream3.writeUTF(message.trim());
                             dataOutputStream3.flush();
                         }
-                    } catch (UTFDataFormatException e) {
-                        BufferedImage image = ImageIO.read(new File(dataInputStream1.readUTF()));
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        ImageIO.write(image, "png", byteArrayOutputStream);
+//                    }
+//                        ServerSocket serverSockets = new ServerSocket(PORT1);
+//                        Socket accepts = serverSockets.accept();
+//                        System.out.println("Client Connected");
+//
+//                        DataOutputStream dataOutputStreams = new DataOutputStream(accepts.getOutputStream());
+//                        DataInputStream dataInputStreams = new DataInputStream(accepts.getInputStream());
+//
+//
 
-                        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-                        dataOutputStream1.write(size);
-                        System.out.println(size);
-                        dataOutputStream1.write(byteArrayOutputStream.toByteArray());
-                        dataOutputStream1.flush();
-                    }
 
                 }
             } catch (IOException e) {

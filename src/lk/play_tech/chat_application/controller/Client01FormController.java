@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 import lk.play_tech.chat_application.bo.ClientHandler;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.ServerSocket;
@@ -28,6 +30,8 @@ public class Client01FormController {
     Socket socket;
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
+    ImageInputStream imageInputStream;
+    ImageOutputStream imageOutputStream;
     BufferedReader bufferedReader;
     String message = "";
     int i = 10;
@@ -35,6 +39,7 @@ public class Client01FormController {
     public static boolean isImageChoose = false;
     ObjectOutputStream oos;
     ObjectInputStream ois;
+    File file;
 
     public void initialize() {
         Platform.setImplicitExit(false);
@@ -95,19 +100,19 @@ public class Client01FormController {
     }
 
     public void btnSendOnAction(ActionEvent actionEvent) throws IOException {
-//        if (isImageChoose){
-////            BufferedImage image = ImageIO.read(new File(path));
-////
-////            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-////            ImageIO.write(image, "png", byteArrayOutputStream);
-////
-////            byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-////            dataOutputStream.write(size);
-////            dataOutputStream.write(byteArrayOutputStream.toByteArray());
-////            dataOutputStream.flush();
-//        }else {
+////        if (isImageChoose){
+//            BufferedImage image = ImageIO.read(new File(path));
 //
-//        }
+//            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//            ImageIO.write(image, "png", byteArrayOutputStream);
+//
+//            byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+//            dataOutputStream.write(size);
+//            dataOutputStream.write(byteArrayOutputStream.toByteArray());
+//            dataOutputStream.flush();
+////        }else {
+////
+////        }
         dataOutputStream.writeUTF(txtMessage.getText().trim());
         dataOutputStream.flush();
     }
@@ -116,7 +121,7 @@ public class Client01FormController {
         // get the file selected
         FileChooser chooser = new FileChooser();
         Stage stage = new Stage();
-        File file = chooser.showOpenDialog(stage);
+        file = chooser.showOpenDialog(stage);
 
         if (file != null) {
 //            dataOutputStream.writeUTF(file.getPath());
@@ -139,6 +144,34 @@ public class Client01FormController {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ImageIO.write(image, "png", byteArrayOutputStream);
         byteArrayOutputStream.flush();
+
+        if (file != null) {
+
+//            sendingobject(file.getName(), true, file);
+
+//            try {
+//                Socket socket = null;
+//
+//                socket = new Socket("localhost", 4444);
+//
+//                // Get the size of the file
+//                long length = file.length();
+//                byte[] bytes = new byte[(int) length];
+//                InputStream in = new FileInputStream(file);
+//                OutputStream out = socket.getOutputStream();
+//
+//                int count;
+//                while ((count = in.read(bytes)) > 0) {
+//                    out.write(bytes, 0, count);
+//                }
+//                out.close();
+//                in.close();
+//                socket.close();
+//
+//            } catch (IOException e) {
+//                System.out.println(e.getMessage());
+//            }
+        }
 
 //        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
 //        dataOutputStream.write(size);
