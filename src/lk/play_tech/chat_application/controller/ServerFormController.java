@@ -50,6 +50,7 @@ public class ServerFormController {
     String message = "";
     int i = 0;
     public AnchorPane context = new AnchorPane();
+//    https://www.codegrepper.com/code-examples/java/java+send+an+image+over+a+socket
 
     public void initialize() {
         Platform.setImplicitExit(false);
@@ -70,23 +71,7 @@ public class ServerFormController {
                         accept = null;
                         return;
                     }
-
-                    if (accept != null) {
-                        dataOutputStream.writeUTF(message.trim());
-                        dataOutputStream.flush();
-                    }
-                    if (accept1 != null) {
-                        dataOutputStream1.writeUTF(message.trim());
-                        dataOutputStream1.flush();
-                    }
-                    if (accept2 != null) {
-                        dataOutputStream2.writeUTF(message.trim());
-                        dataOutputStream2.flush();
-                    }
-                    if (accept3 != null) {
-                        dataOutputStream3.writeUTF(message.trim());
-                        dataOutputStream3.flush();
-                    }
+                    sendTextMessage(message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -128,56 +113,16 @@ public class ServerFormController {
                 dataInputStream1 = new DataInputStream(accept1.getInputStream());
 
                 while (!message.equals("exit")) {
-//                    if (dataInputStream1 instanceof ImageInputStream){
-//                        BufferedImage image = ImageIO.read(new File(dataInputStream1.readUTF()));
-//                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//                        ImageIO.write(image, "png", byteArrayOutputStream);
-//
-//                        System.out.println("done");
-//
-//                        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-//                        dataOutputStream1.write(size);
-//                        System.out.println(Arrays.toString(size));
-//                        dataOutputStream1.write(byteArrayOutputStream.toByteArray());
-//                        dataOutputStream1.flush();
-//                    }else {
-                        message = "Client 1 : " + dataInputStream1.readUTF();
-                        System.out.println(message);
-                        String typeName = dataInputStream1.getClass().getTypeName();
-                        System.out.println(typeName);
+                    message = "Client 1 : " + dataInputStream1.readUTF();
+                    System.out.println(message);
+                    String typeName = dataInputStream1.getClass().getTypeName();
+                    System.out.println(typeName);
 
-                        if (message.equals("Client 1 : exit")) {
-                            accept1 = null;
-                            return;
-                        }
-
-                        if (accept != null) {
-                            dataOutputStream.writeUTF(message.trim());
-                            dataOutputStream.flush();
-                        }
-                        if (accept1 != null) {
-                            dataOutputStream1.writeUTF(message.trim());
-                            dataOutputStream1.flush();
-                        }
-                        if (accept2 != null) {
-                            dataOutputStream2.writeUTF(message.trim());
-                            dataOutputStream2.flush();
-                        }
-                        if (accept3 != null) {
-                            dataOutputStream3.writeUTF(message.trim());
-                            dataOutputStream3.flush();
-                        }
-//                    }
-//                        ServerSocket serverSockets = new ServerSocket(PORT1);
-//                        Socket accepts = serverSockets.accept();
-//                        System.out.println("Client Connected");
-//
-//                        DataOutputStream dataOutputStreams = new DataOutputStream(accepts.getOutputStream());
-//                        DataInputStream dataInputStreams = new DataInputStream(accepts.getInputStream());
-//
-//
-
-
+                    if (message.equals("Client 1 : exit")) {
+                        accept1 = null;
+                        return;
+                    }
+                    sendTextMessage(message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -201,23 +146,7 @@ public class ServerFormController {
                         accept2 = null;
                         return;
                     }
-
-                    if (accept != null) {
-                        dataOutputStream.writeUTF(message.trim());
-                        dataOutputStream.flush();
-                    }
-                    if (accept1 != null) {
-                        dataOutputStream1.writeUTF(message.trim());
-                        dataOutputStream1.flush();
-                    }
-                    if (accept2 != null) {
-                        dataOutputStream2.writeUTF(message.trim());
-                        dataOutputStream2.flush();
-                    }
-                    if (accept3 != null) {
-                        dataOutputStream3.writeUTF(message.trim());
-                        dataOutputStream3.flush();
-                    }
+                    sendTextMessage(message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -240,23 +169,7 @@ public class ServerFormController {
                         accept3 = null;
                         return;
                     }
-
-                    if (accept != null) {
-                        dataOutputStream.writeUTF(message.trim());
-                        dataOutputStream.flush();
-                    }
-                    if (accept1 != null) {
-                        dataOutputStream1.writeUTF(message.trim());
-                        dataOutputStream1.flush();
-                    }
-                    if (accept2 != null) {
-                        dataOutputStream2.writeUTF(message.trim());
-                        dataOutputStream2.flush();
-                    }
-                    if (accept3 != null) {
-                        dataOutputStream3.writeUTF(message.trim());
-                        dataOutputStream3.flush();
-                    }
+                    sendTextMessage(message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -264,7 +177,7 @@ public class ServerFormController {
         }).start();
         new Thread(() -> {
             try {
-                while (true){
+                while (true) {
                     ServerSocket imageSocket = new ServerSocket(13085);
                     Socket imgSocket = imageSocket.accept();
                     InputStream imgInputStream = imgSocket.getInputStream();
@@ -285,7 +198,7 @@ public class ServerFormController {
                     imageSocket.close();
                     imgSocket.close();
                     imageSocket = null;
-                    imageSocket=null;
+                    imageSocket = null;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -294,8 +207,6 @@ public class ServerFormController {
     }
 
     public void btnSendOnAction(ActionEvent actionEvent) throws IOException {
-//        dataOutputStream.writeUTF(txtMessage.getText().trim());
-//        dataOutputStream.flush();
         dataOutputStream0.writeUTF(txtMessage.getText().trim());
         dataOutputStream0.flush();
     }
@@ -304,18 +215,27 @@ public class ServerFormController {
     }
 
     public void btnExitOnAction(ActionEvent actionEvent) throws IOException {
+        message = "Server Offline";
+        sendTextMessage(message);
+        System.exit(0);
+    }
+
+    private void sendTextMessage(String message) throws IOException {
+        if (accept != null) {
+            dataOutputStream.writeUTF(message.trim());
+            dataOutputStream.flush();
+        }
         if (accept1 != null) {
-            dataOutputStream1.writeUTF("Server Offline".trim());
+            dataOutputStream1.writeUTF(message.trim());
             dataOutputStream1.flush();
         }
         if (accept2 != null) {
-            dataOutputStream2.writeUTF("Server Offline".trim());
+            dataOutputStream2.writeUTF(message.trim());
             dataOutputStream2.flush();
         }
         if (accept3 != null) {
-            dataOutputStream3.writeUTF("Server Offline".trim());
+            dataOutputStream3.writeUTF(message.trim());
             dataOutputStream3.flush();
         }
-        System.exit(0);
     }
 }
