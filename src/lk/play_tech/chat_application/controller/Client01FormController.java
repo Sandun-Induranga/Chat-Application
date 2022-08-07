@@ -8,17 +8,21 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import lk.play_tech.chat_application.bo.ClientHandler;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 public class Client01FormController {
     public ScrollPane msgContext;
     public TextField txtMessage;
     public AnchorPane context = new AnchorPane();
+    private static ArrayList<ClientHandler> clients = new ArrayList<>();
 
     final int PORT = 50000;
     Socket socket;
@@ -127,5 +131,18 @@ public class Client01FormController {
         dataOutputStream.writeUTF("exit".trim());
         dataOutputStream.flush();
         System.exit(0);
+    }
+
+    public void btnOnAction(ActionEvent actionEvent) throws IOException {
+        BufferedImage image = ImageIO.read(new File(path));
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", byteArrayOutputStream);
+        byteArrayOutputStream.flush();
+
+//        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+//        dataOutputStream.write(size);
+//        dataOutputStream.write(byteArrayOutputStream.toByteArray());
+//        dataOutputStream.flush();
     }
 }

@@ -5,6 +5,8 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 
@@ -15,6 +17,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.sql.Array;
+import java.util.zip.DataFormatException;
 
 public class ServerFormController {
     final int PORT = 64000;
@@ -42,9 +45,12 @@ public class ServerFormController {
     DataOutputStream dataOutputStream2;
     DataInputStream dataInputStream3;
     DataOutputStream dataOutputStream3;
+    ByteArrayInputStream byteArrayInputStream;
+    ByteArrayOutputStream byteArrayOutputStream;
     String message = "";
     int i = 0;
     public AnchorPane context = new AnchorPane();
+    private Image image;
 
     public void initialize() {
         Platform.setImplicitExit(false);
@@ -90,9 +96,9 @@ public class ServerFormController {
 
         new Thread(() -> {
             try {
-                socket = new Socket("localhost",PORT);
+                socket = new Socket("localhost", PORT);
 
-                while (true){
+                while (true) {
                     dataOutputStream0 = new DataOutputStream(socket.getOutputStream());
                     dataInputStream0 = new DataInputStream(socket.getInputStream());
 
@@ -104,7 +110,7 @@ public class ServerFormController {
                             Label label = new Label(message);
                             label.setLayoutY(i);
                             context.getChildren().add(label);
-                            i+=20;
+                            i += 20;
                         }
                     });
                 }
@@ -121,46 +127,49 @@ public class ServerFormController {
 
                 dataOutputStream1 = new DataOutputStream(accept1.getOutputStream());
                 dataInputStream1 = new DataInputStream(accept1.getInputStream());
+
 //                double d = Double.parseDouble(dataInputStream1.readUTF());
-//                BufferedImage image = ImageIO.read(new File(dataInputStream1.readUTF()));
-//
-//                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//                ImageIO.write(image, "png", byteArrayOutputStream);
-//
-//                byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-//                dataOutputStream1.write(size);
-//                dataOutputStream1.write(byteArrayOutputStream.toByteArray());
-////                        dataOutputStream1.flush();
-//                dataOutputStream2.write(size);
-//                dataOutputStream2.write(byteArrayOutputStream.toByteArray());
-////                        dataOutputStream2.flush();
-//                dataOutputStream1.flush();
 
                 while (!message.equals("exit")) {
-                    message = "Client 1 : " + dataInputStream1.readUTF();
-                    System.out.println(message);
+                    try {
+                        message = "Client 1 : " + dataInputStream1.readUTF();
+                        System.out.println(message);
+                        String typeName = dataInputStream1.getClass().getTypeName();
+                        System.out.println(typeName);
 
-                    if (message.equals("Client 1 : exit")) {
-                        accept1 = null;
-                        return;
-                    }
+                        if (message.equals("Client 1 : exit")) {
+                            accept1 = null;
+                            return;
+                        }
 
-                    if (accept != null) {
-                        dataOutputStream.writeUTF(message.trim());
-                        dataOutputStream.flush();
-                    }
-                    if (accept1 != null) {
-                        dataOutputStream1.writeUTF(message.trim());
+                        if (accept != null) {
+                            dataOutputStream.writeUTF(message.trim());
+                            dataOutputStream.flush();
+                        }
+                        if (accept1 != null) {
+                            dataOutputStream1.writeUTF(message.trim());
+                            dataOutputStream1.flush();
+                        }
+                        if (accept2 != null) {
+                            dataOutputStream2.writeUTF(message.trim());
+                            dataOutputStream2.flush();
+                        }
+                        if (accept3 != null) {
+                            dataOutputStream3.writeUTF(message.trim());
+                            dataOutputStream3.flush();
+                        }
+                    } catch (UTFDataFormatException e) {
+                        BufferedImage image = ImageIO.read(new File(dataInputStream1.readUTF()));
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        ImageIO.write(image, "png", byteArrayOutputStream);
+
+                        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+                        dataOutputStream1.write(size);
+                        System.out.println(size);
+                        dataOutputStream1.write(byteArrayOutputStream.toByteArray());
                         dataOutputStream1.flush();
                     }
-                    if (accept2 != null) {
-                        dataOutputStream2.writeUTF(message.trim());
-                        dataOutputStream2.flush();
-                    }
-                    if (accept3 != null) {
-                        dataOutputStream3.writeUTF(message.trim());
-                        dataOutputStream3.flush();
-                    }
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();

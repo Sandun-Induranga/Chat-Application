@@ -14,5 +14,6 @@
       <Label layoutX="171.0" layoutY="59.0" text="Client 01" />
       <Button layoutX="212.0" layoutY="658.0" mnemonicParsing="false" onAction="#btnImageChooserOnAction" text="Send" />
       <Button layoutX="62.0" layoutY="27.0" mnemonicParsing="false" onAction="#btnExitOnAction" text="Exit" />
+      <Button layoutX="280.0" layoutY="671.0" mnemonicParsing="false" onAction="#btnOnAction" text="Button" />
    </children>
 </AnchorPane>
