@@ -105,9 +105,11 @@ public class ServerFormController {
         }).start();
         new Thread(() -> {
             try {
-                serverSocket1 = new ServerSocket(PORT1);
-                accept1 = serverSocket1.accept();
-                System.out.println("Client 1 Connected");
+//                serverSocket1 = new ServerSocket(PORT1);
+//                accept1 = serverSocket1.accept();
+//                System.out.println("Client 1 Connected");
+
+                accept1 = acceptConnection(serverSocket1, PORT1);
 
                 dataOutputStream1 = new DataOutputStream(accept1.getOutputStream());
                 dataInputStream1 = new DataInputStream(accept1.getInputStream());
@@ -131,9 +133,11 @@ public class ServerFormController {
         }).start();
         new Thread(() -> {
             try {
-                serverSocket2 = new ServerSocket(PORT2);
-                accept2 = serverSocket2.accept();
-                System.out.println("Client 2 Connected");
+//                serverSocket2 = new ServerSocket(PORT2);
+//                accept2 = serverSocket2.accept();
+//                System.out.println("Client 2 Connected");
+
+                accept2 = acceptConnection(serverSocket2,PORT2);
 
                 dataOutputStream2 = new DataOutputStream(accept2.getOutputStream());
                 dataInputStream2 = new DataInputStream(accept2.getInputStream());
@@ -218,6 +222,12 @@ public class ServerFormController {
         message = "Server Offline";
         sendTextMessage(message);
         System.exit(0);
+    }
+
+    private Socket acceptConnection(ServerSocket serverSocket, int port) throws IOException {
+        serverSocket = new ServerSocket(port);
+        System.out.println("Client 1 Connected");
+        return serverSocket.accept();
     }
 
     private void sendTextMessage(String message) throws IOException {
