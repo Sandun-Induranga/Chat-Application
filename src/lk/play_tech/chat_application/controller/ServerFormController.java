@@ -30,8 +30,6 @@ public class ServerFormController {
     public TextField txtMessage;
     ServerSocket serverSocket;
     ServerSocket serverSocket1;
-    ServerSocket serverSocket2;
-    ServerSocket serverSocket3;
     Socket accept;
     Socket accept1;
     Socket accept2;
@@ -105,11 +103,7 @@ public class ServerFormController {
         }).start();
         new Thread(() -> {
             try {
-//                serverSocket1 = new ServerSocket(PORT1);
-//                accept1 = serverSocket1.accept();
-//                System.out.println("Client 1 Connected");
-
-                accept1 = acceptConnection(serverSocket1, PORT1);
+                accept1 = acceptConnection(PORT1);
 
                 dataOutputStream1 = new DataOutputStream(accept1.getOutputStream());
                 dataInputStream1 = new DataInputStream(accept1.getInputStream());
@@ -133,11 +127,7 @@ public class ServerFormController {
         }).start();
         new Thread(() -> {
             try {
-//                serverSocket2 = new ServerSocket(PORT2);
-//                accept2 = serverSocket2.accept();
-//                System.out.println("Client 2 Connected");
-
-                accept2 = acceptConnection(serverSocket2,PORT2);
+                accept2 = acceptConnection(PORT2);
 
                 dataOutputStream2 = new DataOutputStream(accept2.getOutputStream());
                 dataInputStream2 = new DataInputStream(accept2.getInputStream());
@@ -158,9 +148,7 @@ public class ServerFormController {
         }).start();
         new Thread(() -> {
             try {
-                serverSocket3 = new ServerSocket(PORT3);
-                accept3 = serverSocket3.accept();
-                System.out.println("Client 3 Connected");
+                accept3 = acceptConnection(PORT3);
 
                 dataOutputStream3 = new DataOutputStream(accept3.getOutputStream());
                 dataInputStream3 = new DataInputStream(accept3.getInputStream());
@@ -201,8 +189,6 @@ public class ServerFormController {
 
                     imageSocket.close();
                     imgSocket.close();
-                    imageSocket = null;
-                    imageSocket = null;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -224,10 +210,10 @@ public class ServerFormController {
         System.exit(0);
     }
 
-    private Socket acceptConnection(ServerSocket serverSocket, int port) throws IOException {
-        serverSocket = new ServerSocket(port);
+    private Socket acceptConnection(int port) throws IOException {
+        serverSocket1 = new ServerSocket(port);
         System.out.println("Client 1 Connected");
-        return serverSocket.accept();
+        return serverSocket1.accept();
     }
 
     private void sendTextMessage(String message) throws IOException {
