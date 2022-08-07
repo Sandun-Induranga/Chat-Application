@@ -1,10 +1,13 @@
 package lk.play_tech.chat_application.controller;
 
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -28,6 +31,7 @@ public class Client01FormController {
 
     final int PORT = 50000;
     Socket socket;
+    Socket imgSocket;
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
     String message = "";
@@ -37,13 +41,14 @@ public class Client01FormController {
     ObjectOutputStream oos;
     ObjectInputStream ois;
     File file;
+    OutputStream imgOutputStream;
+    InputStream imgInputStream;
 
     public void initialize() {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
 
         new Thread(() -> {
-
             try {
                 socket = new Socket("localhost", PORT);
 
@@ -53,41 +58,56 @@ public class Client01FormController {
                     message = dataInputStream.readUTF();
                     System.out.println(message);
 
-//                    BufferedImage image = ImageIO.read(new File(dataInputStream.readUTF()));
-//
-//                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//                    ImageIO.write(image, "png", byteArrayOutputStream);
-//
-//                    byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-//                    dataOutputStream.write(size);
-//                    dataOutputStream.write(byteArrayOutputStream.toByteArray());
-//                    dataOutputStream.flush();
-
-
-//                    byte[] sizeAr = new byte[4];
-//                    dataInputStream.read(sizeAr);
-//                    int sizeg = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
-//
-//                    byte[] imageAr = new byte[sizeg];
-//                    dataInputStream.read(imageAr);
-//
-//                    BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageAr));
-//
-//                    System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
                             Label label = new Label(message);
                             label.setLayoutY(i);
                             context.getChildren().add(label);
-//                            Image img = SwingFXUtils.toFXImage(image, null);
-//                            ImageView imageView = new ImageView(img);
-//                            imageView.setFitHeight(150);
-//                            imageView.setFitWidth(150);
-//                            context.getChildren().add(imageView);
                             i += 20;
                         }
                     });
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        new Thread(() -> {
+            try {
+                imgSocket = new Socket("localhost", 51000);
+
+                while (true) {
+                    imgOutputStream = imgSocket.getOutputStream();
+                    imgInputStream = imgSocket.getInputStream();
+                    if (imgInputStream != null) {
+                        byte[] sizeAr = new byte[4];
+                        imgInputStream.read(sizeAr);
+                        int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+
+                        byte[] imageAr = new byte[size];
+                        imgInputStream.read(imageAr);
+
+                        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
+
+                        System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+                        ImageIO.write(image, "jpg", new File(path));
+                        //BufferedImage sendImage = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
+
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Image img = SwingFXUtils.toFXImage(image, null);
+                                ImageView imageView = new ImageView(img);
+                                imageView.setFitHeight(150);
+                                imageView.setFitWidth(150);
+                                imageView.setLayoutY(100);
+                                context.getChildren().add(imageView);
+                                i += 120;
+                            }
+                        });
+                    }
+
                 }
 
             } catch (IOException e) {
@@ -136,8 +156,6 @@ public class Client01FormController {
     }
 
     public void btnOnAction(ActionEvent actionEvent) throws IOException {
-        Socket imgSocket = new Socket("localhost", 13085);
-        OutputStream outputStream = imgSocket.getOutputStream();
 
         BufferedImage image = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
 
@@ -145,11 +163,10 @@ public class Client01FormController {
         ImageIO.write(image, "jpg", byteArrayOutputStream);
 
         byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-        outputStream.write(size);
-        outputStream.write(byteArrayOutputStream.toByteArray());
-        outputStream.flush();
+        imgOutputStream.write(size);
+        imgOutputStream.write(byteArrayOutputStream.toByteArray());
+        imgOutputStream.flush();
         System.out.println("Flushed: " + System.currentTimeMillis());
         System.out.println("Closing: " + System.currentTimeMillis());
-        imgSocket.close();
     }
 }

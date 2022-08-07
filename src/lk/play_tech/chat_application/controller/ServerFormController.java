@@ -33,6 +33,7 @@ public class ServerFormController {
     public TextField txtMessage;
     ServerSocket serverSocket;
     ServerSocket serverSocket1;
+    ServerSocket imageSocket;
     Socket accept;
     Socket accept1;
     Socket accept2;
@@ -121,14 +122,10 @@ public class ServerFormController {
         new Thread(() -> {
             try {
                 accept1 = acceptConnection(PORT1);
-                accept1Img = acceptConnection(PORT11);
                 System.out.println("Client 1 Connected");
 
                 dataOutputStream1 = new DataOutputStream(accept1.getOutputStream());
                 dataInputStream1 = new DataInputStream(accept1.getInputStream());
-
-                imgInputStream1 = accept1Img.getInputStream();
-                imgOutputStream1 = accept1Img.getOutputStream();
 
                 while (!message.equals("exit")) {
                     message = "Client 1 : " + dataInputStream1.readUTF();
@@ -147,17 +144,66 @@ public class ServerFormController {
             }
 
         }).start();
+
+        // image
+        new Thread(() -> {
+            try {
+                accept1Img = acceptImgConnection(PORT11);
+
+                imgInputStream1 = accept1Img.getInputStream();
+                imgOutputStream1 = accept1Img.getOutputStream();
+
+                while (true) {
+//                    message = "Client 1 : " + dataInputStream1.readUTF();
+//                    System.out.println(message);
+//                    String typeName = dataInputStream1.getClass().getTypeName();
+//                    System.out.println(typeName);
+//
+//                    if (message.equals("Client 1 : exit")) {
+//                        accept1 = null;
+//                        return;
+//                    }
+//                    sendTextMessage(message);
+                    if (imgInputStream1!=null){
+                        byte[] sizeAr = new byte[4];
+                        imgInputStream1.read(sizeAr);
+                        int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+
+                        byte[] imageAr = new byte[size];
+                        imgInputStream1.read(imageAr);
+                        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
+
+                        System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+                        ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
+
+                        BufferedImage sendImage = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
+
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        ImageIO.write(sendImage, "jpg", byteArrayOutputStream);
+
+                        byte[] sendSize = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+                        sendImgMessage(sendSize, byteArrayOutputStream);
+                        System.out.println("Flushed: " + System.currentTimeMillis());
+                        System.out.println("Closing: " + System.currentTimeMillis());
+                        sendImgMessage(sendSize,byteArrayOutputStream);
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
         new Thread(() -> {
             try {
                 accept2 = acceptConnection(PORT2);
-                accept2Img = acceptConnection(PORT22);
+                accept2Img = acceptImgConnection(PORT22);
                 System.out.println("Client 1 Connected");
 
                 dataOutputStream2 = new DataOutputStream(accept2.getOutputStream());
                 dataInputStream2 = new DataInputStream(accept2.getInputStream());
 
-                imgOutputStream2 = accept2.getOutputStream();
-                imgInputStream2 = accept2.getInputStream();
+                imgOutputStream2 = accept2Img.getOutputStream();
+                imgInputStream2 = accept2Img.getInputStream();
 
                 while (!message.equals("exit")) {
                     message = "Client 2 : " + dataInputStream2.readUTF();
@@ -175,14 +221,61 @@ public class ServerFormController {
         }).start();
         new Thread(() -> {
             try {
+                accept2Img = acceptImgConnection(PORT22);
+
+                imgInputStream2 = accept1Img.getInputStream();
+                imgOutputStream2 = accept1Img.getOutputStream();
+
+                while (true) {
+                    message = "Client 1 : " + dataInputStream2.readUTF();
+                    System.out.println(message);
+                    String typeName = dataInputStream2.getClass().getTypeName();
+                    System.out.println(typeName);
+
+                    if (message.equals("Client 1 : exit")) {
+                        accept1 = null;
+                        return;
+                    }
+                    sendTextMessage(message);
+                    if (imgInputStream2!=null){
+                        byte[] sizeAr = new byte[4];
+                        imgInputStream2.read(sizeAr);
+                        int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+
+                        byte[] imageAr = new byte[size];
+                        imgInputStream2.read(imageAr);
+                        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
+
+                        System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+                        ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
+
+                        BufferedImage sendImage = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
+
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        ImageIO.write(sendImage, "jpg", byteArrayOutputStream);
+
+                        byte[] sendSize = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+                        sendImgMessage(sendSize, byteArrayOutputStream);
+                        System.out.println("Flushed: " + System.currentTimeMillis());
+                        System.out.println("Closing: " + System.currentTimeMillis());
+                        sendImgMessage(sendSize,byteArrayOutputStream);
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        new Thread(() -> {
+            try {
                 accept3 = acceptConnection(PORT3);
-                accept3Img = acceptConnection(PORT33);
+                accept3Img = acceptImgConnection(PORT33);
 
                 dataOutputStream3 = new DataOutputStream(accept3.getOutputStream());
                 dataInputStream3 = new DataInputStream(accept3.getInputStream());
 
-                imgOutputStream3 = accept3.getOutputStream();
-                imgInputStream3 = accept3.getInputStream();
+                imgOutputStream3 = accept3Img.getOutputStream();
+                imgInputStream3 = accept3Img.getInputStream();
 
                 while (true) {
                     message = "Client 3 : " + dataInputStream3.readUTF();
@@ -198,33 +291,39 @@ public class ServerFormController {
                 e.printStackTrace();
             }
         }).start();
-        new Thread(() -> {
-            try {
-                while (true) {
-                    ServerSocket imageSocket = new ServerSocket(13085);
-                    Socket imgSocket = imageSocket.accept();
-                    InputStream imgInputStream = imgSocket.getInputStream();
-                    System.out.println("Reading: " + System.currentTimeMillis());
-
-                    byte[] sizeAr = new byte[4];
-                    imgInputStream.read(sizeAr);
-                    int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
-
-                    byte[] imageAr = new byte[size];
-                    imgInputStream.read(imageAr);
-
-                    BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
-
-                    System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
-                    ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
-
-                    imageSocket.close();
-                    imgSocket.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
+//        new Thread(() -> {
+//            try {
+////                imageSocket = new ServerSocket(PORT11);
+//                accept1Img = acceptImgConnection(PORT11);
+//                while (true) {
+//
+//                    if (imgInputStream1!=null){
+//                        byte[] sizeAr = new byte[4];
+//                        imgInputStream1.read(sizeAr);
+//                        int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+//
+//                        byte[] imageAr = new byte[size];
+//                        imgInputStream1.read(imageAr);
+//                        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
+//
+//                        System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+//                        ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
+//
+//                        BufferedImage sendImage = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
+//
+//                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//                        ImageIO.write(sendImage, "jpg", byteArrayOutputStream);
+//
+//                        byte[] sendSize = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+//                        sendImgMessage(sendSize, byteArrayOutputStream);
+//                        System.out.println("Flushed: " + System.currentTimeMillis());
+//                        System.out.println("Closing: " + System.currentTimeMillis());
+//                    }
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
     }
 
     public void btnSendOnAction(ActionEvent actionEvent) throws IOException {
@@ -246,6 +345,11 @@ public class ServerFormController {
         return serverSocket1.accept();
     }
 
+    private Socket acceptImgConnection(int port) throws IOException {
+        imageSocket = new ServerSocket(port);
+        return imageSocket.accept();
+    }
+
     private void sendTextMessage(String message) throws IOException {
         if (accept != null) {
             dataOutputStream.writeUTF(message.trim());
@@ -262,6 +366,30 @@ public class ServerFormController {
         if (accept3 != null) {
             dataOutputStream3.writeUTF(message.trim());
             dataOutputStream3.flush();
+        }
+    }
+
+    private void sendImgMessage(byte[] sendSize, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
+        if (acceptImg != null) {
+            imgOutputStream.write(sendSize);
+            imgOutputStream.write(byteArrayOutputStream.toByteArray());
+            imgOutputStream.flush();
+        }
+        if (accept1Img != null) {
+            imgOutputStream1.write(sendSize);
+            imgOutputStream1.write(byteArrayOutputStream.toByteArray());
+            imgOutputStream1.flush();
+            System.out.println("done");
+        }
+        if (accept2Img != null) {
+            imgOutputStream2.write(sendSize);
+            imgOutputStream2.write(byteArrayOutputStream.toByteArray());
+            imgOutputStream2.flush();
+        }
+        if (accept3Img != null) {
+            imgOutputStream3.write(sendSize);
+            imgOutputStream3.write(byteArrayOutputStream.toByteArray());
+            imgOutputStream3.flush();
         }
     }
 }
