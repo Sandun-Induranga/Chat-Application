@@ -32,10 +32,18 @@ public class Client {
         serverSocket = new ServerSocket(port);
         this.accept = serverSocket.accept();
     }
+    public void acceptImgConnection(int port) throws IOException {
+        serverSocket = new ServerSocket(port);
+        this.imgSocket = serverSocket.accept();
+    }
 
     public void setInputAndOutput() throws IOException {
         this.dataInputStream = new DataInputStream(accept.getInputStream());
         this.dataOutputStream = new DataOutputStream(accept.getOutputStream());
+    }
+    public void setImageInputAndOutput() throws IOException {
+        this.imgInputStream = imgSocket.getInputStream();
+        this.imgOutputStream = imgSocket.getOutputStream();
     }
 
     public void processTextMessage() throws IOException {

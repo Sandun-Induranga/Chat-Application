@@ -70,47 +70,47 @@ public class Client01FormController {
             }
         }).start();
 
-//        new Thread(() -> {
-//            try {
-//                imgSocket = new Socket("localhost", 51000);
-//
-//                while (true) {
-//                    imgOutputStream = imgSocket.getOutputStream();
-//                    imgInputStream = imgSocket.getInputStream();
-//                    if (imgInputStream != null) {
-//                        byte[] sizeAr = new byte[4];
-//                        imgInputStream.read(sizeAr);
-//                        int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
-//
-//                        byte[] imageAr = new byte[size];
-//                        imgInputStream.read(imageAr);
-//
-//                        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
-//
-//                        System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
-//                        ImageIO.write(image, "jpg", new File(path));
-//                        //BufferedImage sendImage = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
-//
-//                        Platform.runLater(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                Image img = SwingFXUtils.toFXImage(image, null);
-//                                ImageView imageView = new ImageView(img);
-//                                imageView.setFitHeight(150);
-//                                imageView.setFitWidth(150);
-//                                imageView.setLayoutY(100);
-//                                context.getChildren().add(imageView);
-//                                i += 120;
-//                            }
-//                        });
-//                    }
-//
-//                }
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }).start();
+        new Thread(() -> {
+            try {
+                imgSocket = new Socket("localhost", PORT+1);
+
+                while (true) {
+                    imgOutputStream = imgSocket.getOutputStream();
+                    imgInputStream = imgSocket.getInputStream();
+                    if (imgInputStream != null) {
+                        byte[] sizeAr = new byte[4];
+                        imgInputStream.read(sizeAr);
+                        int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+
+                        byte[] imageAr = new byte[size];
+                        imgInputStream.read(imageAr);
+
+                        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
+
+                        System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+                        ImageIO.write(image, "jpg", new File(path));
+                        //BufferedImage sendImage = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
+
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Image img = SwingFXUtils.toFXImage(image, null);
+                                ImageView imageView = new ImageView(img);
+                                imageView.setFitHeight(150);
+                                imageView.setFitWidth(150);
+                                imageView.setLayoutY(100);
+                                context.getChildren().add(imageView);
+                                i += 120;
+                            }
+                        });
+                    }
+
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     public void btnSendOnAction(ActionEvent actionEvent) throws IOException {
