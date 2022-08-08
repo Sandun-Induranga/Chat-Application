@@ -1,17 +1,19 @@
 package lk.play_tech.chat_application.controller;
 
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import lk.play_tech.chat_application.model.Client;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
@@ -23,16 +25,12 @@ public class ServerFormController {
     final int PORT1 = 50000;
     final int PORT2 = 60000;
     final int PORT3 = 65000;
-    ServerSocket serverSocket;
     Socket accept;
-    Socket acceptImg;
     Socket socket;
-    DataInputStream dataInputStream;
-    DataOutputStream dataOutputStream;
-    InputStream imgInputStream;
-    OutputStream imgOutputStream;
     DataInputStream dataInputStream0;
     DataOutputStream dataOutputStream0;
+    InputStream imgInputStream;
+    OutputStream imgOutputStream;
     String message = "";
     int i = 0;
     public AnchorPane context = new AnchorPane();
@@ -45,29 +43,6 @@ public class ServerFormController {
     public void initialize() {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
-//        new Thread(() -> {
-//            try {
-//                serverSocket = new ServerSocket(PORT);
-//                accept = serverSocket.accept();
-//                System.out.println("Server Started");
-//                while (true) {
-//                    dataOutputStream = new DataOutputStream(accept.getOutputStream());
-//                    dataInputStream = new DataInputStream(accept.getInputStream());
-//
-//                    message = "Server : " + dataInputStream.readUTF();
-//                    System.out.println(message);
-//
-//                    if (message.equals("Server : exit")) {
-//                        accept = null;
-//                        return;
-//                    }
-//                    sendTextMessage(message);
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }).start();
-
         new Thread(() -> {
             try {
                 socket = new Socket("localhost", PORT);
@@ -88,7 +63,43 @@ public class ServerFormController {
                         }
                     });
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        new Thread(() -> {
+            try {
+                Socket imgSocket = new Socket("localhost", PORT + 1);
+                while (true) {
+                    imgOutputStream = imgSocket.getOutputStream();
+                    imgInputStream = imgSocket.getInputStream();
 
+                    byte[] sizeAr = new byte[4];
+                    imgInputStream.read(sizeAr);
+                    int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+
+                    byte[] imageAr = new byte[size];
+                    imgInputStream.read(imageAr);
+
+                    BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
+
+                    System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+                    ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test4.jpg"));
+                    //BufferedImage sendImage = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
+
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            Image img = SwingFXUtils.toFXImage(image, null);
+                            ImageView imageView = new ImageView(img);
+                            imageView.setFitHeight(150);
+                            imageView.setFitWidth(150);
+                            imageView.setLayoutY(100);
+                            context.getChildren().add(imageView);
+                            i += 120;
+                        }
+                    });
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -129,6 +140,15 @@ public class ServerFormController {
                 client3.acceptConnection();
                 client3.setInputAndOutput();
                 processTextMessage(client3.getDataInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        new Thread(() -> {
+            try {
+                serverClient.acceptImgConnection(PORT + 1);
+                serverClient.setImageInputAndOutput();
+                processImage(serverClient.getImgInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -227,7 +247,7 @@ public class ServerFormController {
                 BufferedImage sendImage = ImageIO.read(new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
 
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                ImageIO.write(image, "jpg", byteArrayOutputStream);
+                ImageIO.write(sendImage, "jpg", byteArrayOutputStream);
 
                 byte[] sendSize = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
                 sendImgMessage(sendSize, byteArrayOutputStream);
