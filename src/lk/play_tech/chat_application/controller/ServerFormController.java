@@ -127,7 +127,7 @@ public class ServerFormController {
             try {
                 client.acceptConnection();
                 client.setInputAndOutput();
-                client.processTextMessage();
+                processTextMessage(client.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -137,7 +137,7 @@ public class ServerFormController {
             try {
                 client2.acceptConnection();
                 client2.setInputAndOutput();
-                client2.processTextMessage();
+                processTextMessage(client2.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -295,6 +295,21 @@ public class ServerFormController {
     private Socket acceptImgConnection(int port) throws IOException {
         imageSocket = new ServerSocket(port);
         return imageSocket.accept();
+    }
+
+    public void processTextMessage(DataInputStream dataInputStream) throws IOException {
+        while (!message.equals("exit")) {
+            message = "Client 1 : " + dataInputStream.readUTF();
+            System.out.println(message);
+            String typeName = dataInputStream.getClass().getTypeName();
+            System.out.println(typeName);
+
+            if (message.equals("Client 1 : exit")) {
+                accept = null;
+                return;
+            }
+            sendTextMessage(message);
+        }
     }
 
     private void sendTextMessage(String message) throws IOException {

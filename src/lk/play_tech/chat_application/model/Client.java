@@ -49,7 +49,7 @@ public class Client {
                 accept = null;
                 return;
             }
-            sendTextMessage(message);
+//            sendTextMessage(message);
         }
     }
 
