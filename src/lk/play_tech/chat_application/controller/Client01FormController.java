@@ -43,6 +43,7 @@ public class Client01FormController {
     public void initialize() {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
+        msgContext.vvalueProperty().bind(context.heightProperty());
 
         new Thread(() -> {
             try {
@@ -87,12 +88,12 @@ public class Client01FormController {
 
                     System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
                     ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test1.jpg"));
-                    //BufferedImage sendImage = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
+                    BufferedImage sendImage = ImageIO.read(new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test1.jpg"));
 
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            Image img = SwingFXUtils.toFXImage(image, null);
+                            Image img = SwingFXUtils.toFXImage(sendImage, null);
                             ImageView imageView = new ImageView(img);
                             imageView.setFitHeight(150);
                             imageView.setFitWidth(150);

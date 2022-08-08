@@ -43,6 +43,7 @@ public class ServerFormController {
     public void initialize() {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
+        msgContext.vvalueProperty().bind(context.heightProperty());
         new Thread(() -> {
             try {
                 socket = new Socket("localhost", PORT);
@@ -232,29 +233,27 @@ public class ServerFormController {
 
     private void processImage(InputStream inputStream) throws IOException {
         while (true) {
-            if (inputStream != null) {
-                byte[] sizeAr = new byte[4];
-                inputStream.read(sizeAr);
-                int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+            byte[] sizeAr = new byte[4];
+            inputStream.read(sizeAr);
+            int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
 
-                byte[] imageAr = new byte[size];
-                inputStream.read(imageAr);
-                BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
+            byte[] imageAr = new byte[size];
+            inputStream.read(imageAr);
+            BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
 
-                System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
-                ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
+            System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+            ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
 
-                BufferedImage sendImage = ImageIO.read(new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
+            BufferedImage sendImage = ImageIO.read(new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
 
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                ImageIO.write(sendImage, "jpg", byteArrayOutputStream);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ImageIO.write(sendImage, "jpg", byteArrayOutputStream);
 
-                byte[] sendSize = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-                sendImgMessage(sendSize, byteArrayOutputStream);
-                System.out.println("Flushed: " + System.currentTimeMillis());
-                System.out.println("Closing: " + System.currentTimeMillis());
-                sendImgMessage(sendSize, byteArrayOutputStream);
-            }
+            byte[] sendSize = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+            sendImgMessage(sendSize, byteArrayOutputStream);
+            System.out.println("Flushed: " + System.currentTimeMillis());
+            System.out.println("Closing: " + System.currentTimeMillis());
+            sendImgMessage(sendSize, byteArrayOutputStream);
         }
     }
 

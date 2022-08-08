@@ -43,6 +43,7 @@ public class Client03FormController {
     public void initialize() {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
+        msgContext.vvalueProperty().bind(context.heightProperty());
 
         new Thread(() -> {
             try {
