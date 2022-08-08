@@ -82,6 +82,5 @@ public class Client02FormController {
         outputStream.flush();
         System.out.println("Flushed: " + System.currentTimeMillis());
         System.out.println("Closing: " + System.currentTimeMillis());
-        imgSocket.close();
     }
 }

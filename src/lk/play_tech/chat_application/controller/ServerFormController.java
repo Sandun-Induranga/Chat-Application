@@ -5,44 +5,27 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.FileChooser;
 import lk.play_tech.chat_application.model.Client;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.sql.Array;
-import java.util.Arrays;
-import java.util.zip.DataFormatException;
 
 public class ServerFormController {
+    public ScrollPane msgContext;
+    public TextField txtMessage;
+
     final int PORT = 64000;
     final int PORT1 = 50000;
     final int PORT2 = 60000;
     final int PORT3 = 65000;
-    final int PORT11 = 51000;
-    final int PORT22 = 62000;
-    final int PORT33 = 63000;
-    public ScrollPane msgContext;
-    public TextField txtMessage;
     ServerSocket serverSocket;
-    ServerSocket serverSocket1;
-    ServerSocket imageSocket;
     Socket accept;
-    Socket accept1;
-    Socket accept2;
-    Socket accept3;
     Socket acceptImg;
-    Socket accept1Img;
-    Socket accept2Img;
-    Socket accept3Img;
     Socket socket;
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
@@ -50,23 +33,10 @@ public class ServerFormController {
     OutputStream imgOutputStream;
     DataInputStream dataInputStream0;
     DataOutputStream dataOutputStream0;
-    InputStream imgInputStream0;
-    OutputStream imgOutputStream0;
-    DataInputStream dataInputStream1;
-    DataOutputStream dataOutputStream1;
-    InputStream imgInputStream1;
-    OutputStream imgOutputStream1;
-    DataInputStream dataInputStream2;
-    DataOutputStream dataOutputStream2;
-    InputStream imgInputStream2;
-    OutputStream imgOutputStream2;
-    DataInputStream dataInputStream3;
-    DataOutputStream dataOutputStream3;
-    InputStream imgInputStream3;
-    OutputStream imgOutputStream3;
     String message = "";
     int i = 0;
     public AnchorPane context = new AnchorPane();
+    Client serverClient;
     Client client;
     Client client2;
     Client client3;
@@ -75,28 +45,28 @@ public class ServerFormController {
     public void initialize() {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
-        new Thread(() -> {
-            try {
-                serverSocket = new ServerSocket(PORT);
-                accept = serverSocket.accept();
-                System.out.println("Server Started");
-                while (true) {
-                    dataOutputStream = new DataOutputStream(accept.getOutputStream());
-                    dataInputStream = new DataInputStream(accept.getInputStream());
-
-                    message = "Server : " + dataInputStream.readUTF();
-                    System.out.println(message);
-
-                    if (message.equals("Server : exit")) {
-                        accept = null;
-                        return;
-                    }
-                    sendTextMessage(message);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
+//        new Thread(() -> {
+//            try {
+//                serverSocket = new ServerSocket(PORT);
+//                accept = serverSocket.accept();
+//                System.out.println("Server Started");
+//                while (true) {
+//                    dataOutputStream = new DataOutputStream(accept.getOutputStream());
+//                    dataInputStream = new DataInputStream(accept.getInputStream());
+//
+//                    message = "Server : " + dataInputStream.readUTF();
+//                    System.out.println(message);
+//
+//                    if (message.equals("Server : exit")) {
+//                        accept = null;
+//                        return;
+//                    }
+//                    sendTextMessage(message);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
 
         new Thread(() -> {
             try {
@@ -119,6 +89,16 @@ public class ServerFormController {
                     });
                 }
 
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        new Thread(() -> {
+            serverClient = new Client(PORT);
+            try {
+                serverClient.acceptConnection();
+                serverClient.setInputAndOutput();
+                processTextMessage(serverClient.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -155,66 +135,31 @@ public class ServerFormController {
         }).start();
         new Thread(() -> {
             try {
-                client.acceptImgConnection(PORT1+1);
+                client.acceptImgConnection(PORT1 + 1);
                 client.setImageInputAndOutput();
                 processImage(client.getImgInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();
-
-//        // image
-//        new Thread(() -> {
-//            try {
-//                accept1Img = acceptImgConnection(PORT11);
-//
-//                imgInputStream1 = accept1Img.getInputStream();
-//                imgOutputStream1 = accept1Img.getOutputStream();
-//
-//                while (true) {
-////                    message = "Client 1 : " + dataInputStream1.readUTF();
-////                    System.out.println(message);
-////                    String typeName = dataInputStream1.getClass().getTypeName();
-////                    System.out.println(typeName);
-////
-////                    if (message.equals("Client 1 : exit")) {
-////                        accept1 = null;
-////                        return;
-////                    }
-////                    sendTextMessage(message);
-//                    processImage(imgInputStream1);
-//                }
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }).start();
-
-//        new Thread(() -> {
-//            try {
-//                accept2Img = acceptImgConnection(PORT22);
-//
-//                imgInputStream2 = accept1Img.getInputStream();
-//                imgOutputStream2 = accept1Img.getOutputStream();
-//
-//                while (true) {
-//                    message = "Client 1 : " + dataInputStream2.readUTF();
-//                    System.out.println(message);
-//                    String typeName = dataInputStream2.getClass().getTypeName();
-//                    System.out.println(typeName);
-//
-//                    if (message.equals("Client 1 : exit")) {
-//                        accept1 = null;
-//                        return;
-//                    }
-//                    sendTextMessage(message);
-//                    processImage(imgInputStream2);
-//                }
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }).start();
+        new Thread(() -> {
+            try {
+                client2.acceptImgConnection(PORT2 + 1);
+                client2.setImageInputAndOutput();
+                processImage(client2.getImgInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        new Thread(() -> {
+            try {
+                client3.acceptImgConnection(PORT3 + 1);
+                client3.setImageInputAndOutput();
+                processImage(client3.getImgInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     public void btnSendOnAction(ActionEvent actionEvent) throws IOException {
@@ -247,9 +192,9 @@ public class ServerFormController {
     }
 
     private void sendTextMessage(String message) throws IOException {
-        if (accept != null) {
-            dataOutputStream.writeUTF(message.trim());
-            dataOutputStream.flush();
+        if (serverClient.getAccept() != null) {
+            serverClient.getDataOutputStream().writeUTF(message.trim());
+            serverClient.getDataOutputStream().flush();
         }
         if (client.getAccept() != null) {
             client.getDataOutputStream().writeUTF(message.trim());
@@ -266,7 +211,7 @@ public class ServerFormController {
     }
 
     private void processImage(InputStream inputStream) throws IOException {
-        while (true){
+        while (true) {
             if (inputStream != null) {
                 byte[] sizeAr = new byte[4];
                 inputStream.read(sizeAr);
@@ -294,10 +239,10 @@ public class ServerFormController {
     }
 
     private void sendImgMessage(byte[] sendSize, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
-        if (acceptImg != null) {
-            imgOutputStream.write(sendSize);
-            imgOutputStream.write(byteArrayOutputStream.toByteArray());
-            imgOutputStream.flush();
+        if (serverClient.getImgSocket() != null) {
+            serverClient.getImgOutputStream().write(sendSize);
+            serverClient.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
+            serverClient.getImgOutputStream().flush();
         }
         if (client.getImgSocket() != null) {
             client.getImgOutputStream().write(sendSize);
