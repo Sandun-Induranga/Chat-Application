@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import lk.play_tech.chat_application.model.Client;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
@@ -66,6 +67,8 @@ public class ServerFormController {
     String message = "";
     int i = 0;
     public AnchorPane context = new AnchorPane();
+    Client client;
+    Client client2;
 //    https://www.codegrepper.com/code-examples/java/java+send+an+image+over+a+socket
 
     public void initialize() {
@@ -120,40 +123,34 @@ public class ServerFormController {
             }
         }).start();
         new Thread(() -> {
+            client = new Client(PORT1);
             try {
-                accept1 = acceptConnection(PORT1);
-                System.out.println("Client 1 Connected");
-
-                dataOutputStream1 = new DataOutputStream(accept1.getOutputStream());
-                dataInputStream1 = new DataInputStream(accept1.getInputStream());
-
-                while (!message.equals("exit")) {
-                    message = "Client 1 : " + dataInputStream1.readUTF();
-                    System.out.println(message);
-                    String typeName = dataInputStream1.getClass().getTypeName();
-                    System.out.println(typeName);
-
-                    if (message.equals("Client 1 : exit")) {
-                        accept1 = null;
-                        return;
-                    }
-                    sendTextMessage(message);
-                }
+                client.acceptConnection();
+                client.setInputAndOutput();
+                client.processTextMessage();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }).start();
-
-        // image
         new Thread(() -> {
+            client2 = new Client(PORT2);
             try {
-                accept1Img = acceptImgConnection(PORT11);
-
-                imgInputStream1 = accept1Img.getInputStream();
-                imgOutputStream1 = accept1Img.getOutputStream();
-
-                while (true) {
+                client2.acceptConnection();
+                client2.setInputAndOutput();
+                client2.processTextMessage();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+//        new Thread(() -> {
+//            try {
+//                accept1 = acceptConnection(PORT1);
+//                System.out.println("Client 1 Connected");
+//
+//                dataOutputStream1 = new DataOutputStream(accept1.getOutputStream());
+//                dataInputStream1 = new DataInputStream(accept1.getInputStream());
+//
+//                while (!message.equals("exit")) {
 //                    message = "Client 1 : " + dataInputStream1.readUTF();
 //                    System.out.println(message);
 //                    String typeName = dataInputStream1.getClass().getTypeName();
@@ -164,90 +161,116 @@ public class ServerFormController {
 //                        return;
 //                    }
 //                    sendTextMessage(message);
-                    processImage(imgInputStream1);
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-        new Thread(() -> {
-            try {
-                accept2 = acceptConnection(PORT2);
-                accept2Img = acceptImgConnection(PORT22);
-                System.out.println("Client 1 Connected");
-
-                dataOutputStream2 = new DataOutputStream(accept2.getOutputStream());
-                dataInputStream2 = new DataInputStream(accept2.getInputStream());
-
-                imgOutputStream2 = accept2Img.getOutputStream();
-                imgInputStream2 = accept2Img.getInputStream();
-
-                while (!message.equals("exit")) {
-                    message = "Client 2 : " + dataInputStream2.readUTF();
-                    System.out.println(message);
-
-                    if (message.equals("Client 2 : exit")) {
-                        accept2 = null;
-                        return;
-                    }
-                    sendTextMessage(message);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-        new Thread(() -> {
-            try {
-                accept2Img = acceptImgConnection(PORT22);
-
-                imgInputStream2 = accept1Img.getInputStream();
-                imgOutputStream2 = accept1Img.getOutputStream();
-
-                while (true) {
-                    message = "Client 1 : " + dataInputStream2.readUTF();
-                    System.out.println(message);
-                    String typeName = dataInputStream2.getClass().getTypeName();
-                    System.out.println(typeName);
-
-                    if (message.equals("Client 1 : exit")) {
-                        accept1 = null;
-                        return;
-                    }
-                    sendTextMessage(message);
-                    processImage(imgInputStream2);
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-        new Thread(() -> {
-            try {
-                // TODO: 2022-08-07  
-                accept3 = acceptConnection(PORT3);
-                accept3Img = acceptImgConnection(PORT33);
-
-                dataOutputStream3 = new DataOutputStream(accept3.getOutputStream());
-                dataInputStream3 = new DataInputStream(accept3.getInputStream());
-
-                imgOutputStream3 = accept3Img.getOutputStream();
-                imgInputStream3 = accept3Img.getInputStream();
-
-                while (true) {
-                    message = "Client 3 : " + dataInputStream3.readUTF();
-                    System.out.println(message);
-
-                    if (message.equals("Client 3 : exit")) {
-                        accept3 = null;
-                        return;
-                    }
-                    sendTextMessage(message);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }).start();
+//
+//        // image
+//        new Thread(() -> {
+//            try {
+//                accept1Img = acceptImgConnection(PORT11);
+//
+//                imgInputStream1 = accept1Img.getInputStream();
+//                imgOutputStream1 = accept1Img.getOutputStream();
+//
+//                while (true) {
+////                    message = "Client 1 : " + dataInputStream1.readUTF();
+////                    System.out.println(message);
+////                    String typeName = dataInputStream1.getClass().getTypeName();
+////                    System.out.println(typeName);
+////
+////                    if (message.equals("Client 1 : exit")) {
+////                        accept1 = null;
+////                        return;
+////                    }
+////                    sendTextMessage(message);
+//                    processImage(imgInputStream1);
+//                }
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
+//        new Thread(() -> {
+//            try {
+//                accept2 = acceptConnection(PORT2);
+//                accept2Img = acceptImgConnection(PORT22);
+//                System.out.println("Client 1 Connected");
+//
+//                dataOutputStream2 = new DataOutputStream(accept2.getOutputStream());
+//                dataInputStream2 = new DataInputStream(accept2.getInputStream());
+//
+//                imgOutputStream2 = accept2Img.getOutputStream();
+//                imgInputStream2 = accept2Img.getInputStream();
+//
+//                while (!message.equals("exit")) {
+//                    message = "Client 2 : " + dataInputStream2.readUTF();
+//                    System.out.println(message);
+//
+//                    if (message.equals("Client 2 : exit")) {
+//                        accept2 = null;
+//                        return;
+//                    }
+//                    sendTextMessage(message);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
+//        new Thread(() -> {
+//            try {
+//                accept2Img = acceptImgConnection(PORT22);
+//
+//                imgInputStream2 = accept1Img.getInputStream();
+//                imgOutputStream2 = accept1Img.getOutputStream();
+//
+//                while (true) {
+//                    message = "Client 1 : " + dataInputStream2.readUTF();
+//                    System.out.println(message);
+//                    String typeName = dataInputStream2.getClass().getTypeName();
+//                    System.out.println(typeName);
+//
+//                    if (message.equals("Client 1 : exit")) {
+//                        accept1 = null;
+//                        return;
+//                    }
+//                    sendTextMessage(message);
+//                    processImage(imgInputStream2);
+//                }
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
+//        new Thread(() -> {
+//            try {
+//                // TODO: 2022-08-07
+//                accept3 = acceptConnection(PORT3);
+//                accept3Img = acceptImgConnection(PORT33);
+//
+//                dataOutputStream3 = new DataOutputStream(accept3.getOutputStream());
+//                dataInputStream3 = new DataInputStream(accept3.getInputStream());
+//
+//                imgOutputStream3 = accept3Img.getOutputStream();
+//                imgInputStream3 = accept3Img.getInputStream();
+//
+//                while (true) {
+//                    message = "Client 3 : " + dataInputStream3.readUTF();
+//                    System.out.println(message);
+//
+//                    if (message.equals("Client 3 : exit")) {
+//                        accept3 = null;
+//                        return;
+//                    }
+//                    sendTextMessage(message);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
     }
 
     public void btnSendOnAction(ActionEvent actionEvent) throws IOException {
@@ -279,18 +302,18 @@ public class ServerFormController {
             dataOutputStream.writeUTF(message.trim());
             dataOutputStream.flush();
         }
-        if (accept1 != null) {
-            dataOutputStream1.writeUTF(message.trim());
-            dataOutputStream1.flush();
+        if (client.getAccept() != null) {
+            client.getDataOutputStream().writeUTF(message.trim());
+            client.getDataOutputStream().flush();
         }
-        if (accept2 != null) {
-            dataOutputStream2.writeUTF(message.trim());
-            dataOutputStream2.flush();
+        if (client2.getAccept() != null) {
+            client2.getDataOutputStream().writeUTF(message.trim());
+            client2.getDataOutputStream().flush();
         }
-        if (accept3 != null) {
-            dataOutputStream3.writeUTF(message.trim());
-            dataOutputStream3.flush();
-        }
+//        if (accept3 != null) {
+//            dataOutputStream3.writeUTF(message.trim());
+//            dataOutputStream3.flush();
+//        }
     }
 
     private void processImage(InputStream inputStream) throws IOException {
