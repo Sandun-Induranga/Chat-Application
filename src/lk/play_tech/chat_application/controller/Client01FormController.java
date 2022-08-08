@@ -24,7 +24,6 @@ public class Client01FormController {
     public ScrollPane msgContext;
     public TextField txtMessage;
     public AnchorPane context = new AnchorPane();
-    private static ArrayList<ClientHandler> clients = new ArrayList<>();
 
     final int PORT = 50000;
     Socket socket;
@@ -73,11 +72,12 @@ public class Client01FormController {
         new Thread(() -> {
             try {
                 imgSocket = new Socket("localhost", PORT+1);
+                imgOutputStream = imgSocket.getOutputStream();
+                imgInputStream = imgSocket.getInputStream();
 
                 while (true) {
-                    imgOutputStream = imgSocket.getOutputStream();
-                    imgInputStream = imgSocket.getInputStream();
                     if (imgInputStream != null) {
+
                         byte[] sizeAr = new byte[4];
                         imgInputStream.read(sizeAr);
                         int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
@@ -88,7 +88,7 @@ public class Client01FormController {
                         BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
 
                         System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
-                        ImageIO.write(image, "jpg", new File(path));
+                        ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test1.jpg"));
                         //BufferedImage sendImage = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
 
                         Platform.runLater(new Runnable() {
@@ -152,9 +152,10 @@ public class Client01FormController {
         System.exit(0);
     }
 
+
     public void btnOnAction(ActionEvent actionEvent) throws IOException {
 
-        BufferedImage image = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
+        BufferedImage image = ImageIO.read(new File(path));
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ImageIO.write(image, "jpg", byteArrayOutputStream);
