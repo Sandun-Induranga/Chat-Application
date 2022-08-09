@@ -43,7 +43,7 @@ public class ServerFormController {
     Client client2;
     Client client3;
     ArrayList<Client> clients = new ArrayList<>();
-    int[] ports = {PORT,PORT1,PORT2,PORT3};
+    int[] ports = {PORT, PORT1, PORT2, PORT3};
 //    https://www.codegrepper.com/code-examples/java/java+send+an+image+over+a+socket
 
     public void initialize() {
@@ -116,7 +116,7 @@ public class ServerFormController {
             try {
                 serverClient.acceptConnection();
                 serverClient.setInputAndOutput();
-                processTextMessage(serverClient.getDataInputStream());
+                processTextMessage(serverClient, serverClient.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -126,7 +126,8 @@ public class ServerFormController {
             try {
                 client.acceptConnection();
                 client.setInputAndOutput();
-                processTextMessage(client.getDataInputStream());
+                client.setName(LoginFormController.users.get(0));
+                processTextMessage(client, client.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -136,7 +137,8 @@ public class ServerFormController {
             try {
                 client2.acceptConnection();
                 client2.setInputAndOutput();
-                processTextMessage(client2.getDataInputStream());
+                client2.setName(LoginFormController.users.get(0));
+                processTextMessage(client2,client2.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -146,7 +148,8 @@ public class ServerFormController {
             try {
                 client3.acceptConnection();
                 client3.setInputAndOutput();
-                processTextMessage(client3.getDataInputStream());
+                client3.setName(LoginFormController.users.get(0));
+                processTextMessage(client3, client3.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -203,9 +206,9 @@ public class ServerFormController {
         System.exit(0);
     }
 
-    public void processTextMessage(DataInputStream dataInputStream) throws IOException {
+    public void processTextMessage(Client client, DataInputStream dataInputStream) throws IOException {
         while (!message.equals("exit")) {
-            message = "Client 1 : " + dataInputStream.readUTF();
+            message = client.getName() + " : " + dataInputStream.readUTF();
             System.out.println(message);
             String typeName = dataInputStream.getClass().getTypeName();
             System.out.println(typeName);
@@ -219,29 +222,22 @@ public class ServerFormController {
     }
 
     private void sendTextMessage(String message) throws IOException {
-        for (Client client:
-             clients) {
-            if (client.getAccept() != null) {
-                client.getDataOutputStream().writeUTF(message.trim());
-                client.getDataOutputStream().flush();
-            }
+        if (serverClient.getAccept() != null) {
+            serverClient.getDataOutputStream().writeUTF(message.trim());
+            serverClient.getDataOutputStream().flush();
         }
-//        if (serverClient.getAccept() != null) {
-//            serverClient.getDataOutputStream().writeUTF(message.trim());
-//            serverClient.getDataOutputStream().flush();
-//        }
-//        if (client.getAccept() != null) {
-//            client.getDataOutputStream().writeUTF(message.trim());
-//            client.getDataOutputStream().flush();
-//        }
-//        if (client2.getAccept() != null) {
-//            client2.getDataOutputStream().writeUTF(message.trim());
-//            client2.getDataOutputStream().flush();
-//        }
-//        if (client3.getAccept() != null) {
-//            client3.getDataOutputStream().writeUTF(message.trim());
-//            client3.getDataOutputStream().flush();
-//        }
+        if (client.getAccept() != null) {
+            client.getDataOutputStream().writeUTF(message.trim());
+            client.getDataOutputStream().flush();
+        }
+        if (client2.getAccept() != null) {
+            client2.getDataOutputStream().writeUTF(message.trim());
+            client2.getDataOutputStream().flush();
+        }
+        if (client3.getAccept() != null) {
+            client3.getDataOutputStream().writeUTF(message.trim());
+            client3.getDataOutputStream().flush();
+        }
     }
 
     private void processImage(InputStream inputStream) throws IOException {

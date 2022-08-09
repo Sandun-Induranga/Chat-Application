@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LoginFormController {
     public TextField txtName;
@@ -25,23 +26,5 @@ public class LoginFormController {
             users.add(userName);
             flag = true;
         }
-
-        for (String s : users) {
-            if (!s.equalsIgnoreCase(userName)) {
-                flag = true;
-                System.out.println(userName);
-                break;
-            }
-        }
-
-        if (flag) {
-            this.mainRoot.getChildren().clear();
-            this.mainRoot.getChildren().add(FXMLLoader.load(this.getClass().
-                    getResource("../view/MessageForm.fxml")));
-        }
-
-        //System.out.println("Client Login "+ userName);
-        //  MessageEnvironmentFormController.setLblContactName(userName);
-
     }
 }

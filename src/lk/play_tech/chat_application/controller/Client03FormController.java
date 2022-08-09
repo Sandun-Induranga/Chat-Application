@@ -26,6 +26,7 @@ public class Client03FormController {
     public AnchorPane context = new AnchorPane();
 
     final int PORT = 65000;
+    public Label lblClient;
     Socket socket;
     Socket imgSocket;
     DataInputStream dataInputStream;
@@ -44,6 +45,7 @@ public class Client03FormController {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
         msgContext.vvalueProperty().bind(context.heightProperty());
+        lblClient.setText(LoginFormController.users.get(LoginFormController.users.size()-1));
 
         new Thread(() -> {
             try {

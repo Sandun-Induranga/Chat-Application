@@ -11,7 +11,7 @@
       <ScrollPane fx:id="msgContext" layoutX="28.0" layoutY="161.0" opacity="0.4" prefHeight="430.0" prefWidth="350.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="124.0" />
       <TextField fx:id="txtMessage" layoutX="25.0" layoutY="599.0" opacity="0.4" prefHeight="44.0" prefWidth="280.0" />
       <Button layoutX="324.0" layoutY="608.0" mnemonicParsing="false" onAction="#btnSendOnAction" text="Send" />
-      <Label layoutX="171.0" layoutY="59.0" text="Client 01" />
+      <Label fx:id="lblClient" layoutX="171.0" layoutY="59.0" text="Client 01" />
       <Button layoutX="212.0" layoutY="658.0" mnemonicParsing="false" onAction="#btnImageChooserOnAction" text="Send" />
       <Button layoutX="62.0" layoutY="27.0" mnemonicParsing="false" onAction="#btnExitOnAction" text="Exit" />
       <Button layoutX="280.0" layoutY="671.0" mnemonicParsing="false" onAction="#btnOnAction" text="Button" />

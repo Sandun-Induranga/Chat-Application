@@ -14,6 +14,7 @@ import java.net.Socket;
 @Setter
 @Getter
 public class Client {
+    String name;
     int port;
     private ServerSocket serverSocket;
     private Socket accept;
