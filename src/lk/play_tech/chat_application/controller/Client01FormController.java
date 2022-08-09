@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lk.play_tech.chat_application.bo.ClientHandler;
+import lk.play_tech.chat_application.model.Client;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

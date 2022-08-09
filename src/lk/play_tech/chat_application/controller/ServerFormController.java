@@ -16,6 +16,10 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServerFormController {
     public ScrollPane msgContext;
@@ -38,6 +42,8 @@ public class ServerFormController {
     Client client;
     Client client2;
     Client client3;
+    ArrayList<Client> clients = new ArrayList<>();
+    int[] ports = {PORT,PORT1,PORT2,PORT3};
 //    https://www.codegrepper.com/code-examples/java/java+send+an+image+over+a+socket
 
     public void initialize() {
@@ -213,22 +219,29 @@ public class ServerFormController {
     }
 
     private void sendTextMessage(String message) throws IOException {
-        if (serverClient.getAccept() != null) {
-            serverClient.getDataOutputStream().writeUTF(message.trim());
-            serverClient.getDataOutputStream().flush();
+        for (Client client:
+             clients) {
+            if (client.getAccept() != null) {
+                client.getDataOutputStream().writeUTF(message.trim());
+                client.getDataOutputStream().flush();
+            }
         }
-        if (client.getAccept() != null) {
-            client.getDataOutputStream().writeUTF(message.trim());
-            client.getDataOutputStream().flush();
-        }
-        if (client2.getAccept() != null) {
-            client2.getDataOutputStream().writeUTF(message.trim());
-            client2.getDataOutputStream().flush();
-        }
-        if (client3.getAccept() != null) {
-            client3.getDataOutputStream().writeUTF(message.trim());
-            client3.getDataOutputStream().flush();
-        }
+//        if (serverClient.getAccept() != null) {
+//            serverClient.getDataOutputStream().writeUTF(message.trim());
+//            serverClient.getDataOutputStream().flush();
+//        }
+//        if (client.getAccept() != null) {
+//            client.getDataOutputStream().writeUTF(message.trim());
+//            client.getDataOutputStream().flush();
+//        }
+//        if (client2.getAccept() != null) {
+//            client2.getDataOutputStream().writeUTF(message.trim());
+//            client2.getDataOutputStream().flush();
+//        }
+//        if (client3.getAccept() != null) {
+//            client3.getDataOutputStream().writeUTF(message.trim());
+//            client3.getDataOutputStream().flush();
+//        }
     }
 
     private void processImage(InputStream inputStream) throws IOException {
