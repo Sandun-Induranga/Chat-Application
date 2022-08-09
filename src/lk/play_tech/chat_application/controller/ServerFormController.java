@@ -248,7 +248,6 @@ public class ServerFormController {
             byte[] sizeAr = new byte[4];
             inputStream.read(sizeAr);
             int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
-
             byte[] imageAr = new byte[size];
             inputStream.read(imageAr);
             BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
