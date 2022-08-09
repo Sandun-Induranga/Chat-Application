@@ -16,10 +16,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ServerFormController {
     public ScrollPane msgContext;
@@ -42,8 +38,6 @@ public class ServerFormController {
     Client client;
     Client client2;
     Client client3;
-    ArrayList<Client> clients = new ArrayList<>();
-    int[] ports = {PORT, PORT1, PORT2, PORT3};
 //    https://www.codegrepper.com/code-examples/java/java+send+an+image+over+a+socket
 
     public void initialize() {
@@ -64,6 +58,7 @@ public class ServerFormController {
                         @Override
                         public void run() {
                             Label label = new Label(message);
+                            label.setStyle("-fx-font-size: 20px");
                             label.setLayoutY(i);
                             context.getChildren().add(label);
                             i += 20;
@@ -116,7 +111,7 @@ public class ServerFormController {
             try {
                 serverClient.acceptConnection();
                 serverClient.setInputAndOutput();
-                processTextMessage(serverClient, serverClient.getDataInputStream());
+                processTextMessage(serverClient.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -126,7 +121,7 @@ public class ServerFormController {
                 client = new Client(PORT1);
                 client.acceptConnection();
                 client.setInputAndOutput();
-                processTextMessage(client, client.getDataInputStream());
+                processTextMessage(client.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -136,7 +131,7 @@ public class ServerFormController {
             try {
                 client2.acceptConnection();
                 client2.setInputAndOutput();
-                processTextMessage(client2, client2.getDataInputStream());
+                processTextMessage(client2.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -146,7 +141,7 @@ public class ServerFormController {
             try {
                 client3.acceptConnection();
                 client3.setInputAndOutput();
-                processTextMessage(client3, client3.getDataInputStream());
+                processTextMessage(client3.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -203,9 +198,9 @@ public class ServerFormController {
         System.exit(0);
     }
 
-    public void processTextMessage(Client client, DataInputStream dataInputStream) throws IOException {
+    public void processTextMessage(DataInputStream dataInputStream) throws IOException {
         while (!message.equals("exit")) {
-            message = client.getName() + " : " + dataInputStream.readUTF();
+            message = dataInputStream.readUTF();
             System.out.println(message);
             String typeName = dataInputStream.getClass().getTypeName();
             System.out.println(typeName);

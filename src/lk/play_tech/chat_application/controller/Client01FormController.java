@@ -63,6 +63,7 @@ public class Client01FormController {
                         @Override
                         public void run() {
                             Label label = new Label(message);
+                            label.setStyle("-fx-font-size: 20px");
                             label.setLayoutY(i);
                             context.getChildren().add(label);
                             i += 20;

@@ -15,9 +15,10 @@ import java.util.Objects;
 public class LoginForm02Controller {
     public TextField txtName;
     public AnchorPane loginContext;
+    public static String name;
 
     public void btnLoginOnAction(ActionEvent actionEvent) throws IOException {
-        ServerFormController.name2 = txtName.getText();
+        name = txtName.getText();
         loginContext.getChildren().clear();
         Stage stage = (Stage) loginContext.getScene().getWindow();
         stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../view/client-02-form.fxml"))));

@@ -46,7 +46,7 @@ public class Client02FormController {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
         msgContext.vvalueProperty().bind(context.heightProperty());
-        lblClient.setText(ServerFormController.name2);
+        lblClient.setText(LoginForm02Controller.name);
         name = lblClient.getText();
 
         new Thread(() -> {
@@ -63,6 +63,7 @@ public class Client02FormController {
                         @Override
                         public void run() {
                             Label label = new Label(message);
+                            label.setStyle("-fx-font-size: 20px");
                             label.setLayoutY(i);
                             context.getChildren().add(label);
                             i += 20;
@@ -127,7 +128,7 @@ public class Client02FormController {
 ////        }else {
 ////
 ////        }
-        dataOutputStream.writeUTF(txtMessage.getText().trim());
+        dataOutputStream.writeUTF(lblClient.getText() + " : " + txtMessage.getText().trim());
         dataOutputStream.flush();
     }
 
