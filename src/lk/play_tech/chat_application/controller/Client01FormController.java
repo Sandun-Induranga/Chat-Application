@@ -60,7 +60,7 @@ public class Client01FormController {
                         @Override
                         public void run() {
                             Label label = new Label(message);
-                            label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: blue; -fx-text-fill: white");
+                            label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #CDB4DB; -fx-text-fill: white");
                             label.setLayoutY(i);
                             context.getChildren().add(label);
                             i += 30;
@@ -74,7 +74,7 @@ public class Client01FormController {
 
         new Thread(() -> {
             try {
-                imgSocket = new Socket("localhost", PORT + 1);
+                imgSocket = new Socket("localhost", PORT + 5);
                 while (true) {
                     imgOutputStream = imgSocket.getOutputStream();
                     imgInputStream = imgSocket.getInputStream();

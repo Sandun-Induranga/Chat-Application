@@ -8,6 +8,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import lk.play_tech.chat_application.model.Client;
 
@@ -25,7 +26,6 @@ public class ServerFormController {
     final static int PORT1 = 50000;
     final int PORT2 = 60000;
     final int PORT3 = 65000;
-    Socket accept;
     Socket socket;
     DataInputStream dataInputStream0;
     DataOutputStream dataOutputStream0;
@@ -50,11 +50,11 @@ public class ServerFormController {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        Label label = new Label("Server Started");
-                        label.setStyle("-fx-text-fill: white; -fx-font-size: 20px; -fx-background-color: green; -fx-background-radius: 2");
+                        Label label = new Label("Server Started...");
+                        label.setStyle("-fx-font-family: Ubuntu; -fx-font-size: 20px;");
                         label.setLayoutY(i);
                         context.getChildren().add(label);
-                        i += 20;
+                        i += 30;
                     }
                 });
                 while (true) {
@@ -67,7 +67,7 @@ public class ServerFormController {
                         @Override
                         public void run() {
                             Label label = new Label(message);
-                            label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: blue; -fx-text-fill: white");
+                            label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #CDB4DB; -fx-text-fill: white");
                             label.setLayoutY(i);
                             context.getChildren().add(label);
                             i += 20;
@@ -78,49 +78,50 @@ public class ServerFormController {
                 e.printStackTrace();
             }
         }).start();
-        new Thread(() -> {
-            try {
-                Socket imgSocket = new Socket("localhost", PORT + 1);
-                while (true) {
-                    imgOutputStream = imgSocket.getOutputStream();
-                    imgInputStream = imgSocket.getInputStream();
-
-                    byte[] sizeAr = new byte[4];
-                    imgInputStream.read(sizeAr);
-                    int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
-
-                    byte[] imageAr = new byte[size];
-                    imgInputStream.read(imageAr);
-
-                    BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
-
-                    System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
-                    ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test4.jpg"));
-                    //BufferedImage sendImage = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
-
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            Image img = SwingFXUtils.toFXImage(image, null);
-                            ImageView imageView = new ImageView(img);
-                            imageView.setFitHeight(150);
-                            imageView.setFitWidth(150);
-                            imageView.setLayoutY(100);
-                            context.getChildren().add(imageView);
-                            i += 120;
-                        }
-                    });
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
+//        new Thread(() -> {
+//            try {
+//                Socket imgSocket = new Socket("localhost", PORT + 1);
+//                while (true) {
+//                    imgOutputStream = imgSocket.getOutputStream();
+//                    imgInputStream = imgSocket.getInputStream();
+//
+//                    byte[] sizeAr = new byte[4];
+//                    imgInputStream.read(sizeAr);
+//                    int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+//
+//                    byte[] imageAr = new byte[size];
+//                    imgInputStream.read(imageAr);
+//
+//                    BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
+//
+//                    System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+//                    ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test4.jpg"));
+//                    //BufferedImage sendImage = ImageIO.read(new File("/home/sandu/Downloads/296351115_1695464754171592_2138034279597586981_n.jpg"));
+//
+//                    Platform.runLater(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Image img = SwingFXUtils.toFXImage(image, null);
+//                            ImageView imageView = new ImageView(img);
+//                            imageView.setFitHeight(150);
+//                            imageView.setFitWidth(150);
+//                            imageView.setLayoutY(100);
+//                            context.getChildren().add(imageView);
+//                            i += 120;
+//                        }
+//                    });
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
         new Thread(() -> {
             serverClient = new Client(PORT);
             try {
+                serverClient.setName("Admin");
                 serverClient.acceptConnection();
                 serverClient.setInputAndOutput();
-                processTextMessage(serverClient.getDataInputStream());
+                processTextMessage(serverClient, serverClient.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -128,11 +129,10 @@ public class ServerFormController {
         new Thread(() -> {
             try {
                 client = new Client(PORT1);
+                client.setName(LoginForm01Controller.name);
                 client.acceptConnection();
-                dataOutputStream0.writeUTF("New member Joined".trim());
-                dataOutputStream0.flush();
                 client.setInputAndOutput();
-                processTextMessage(client.getDataInputStream());
+                processTextMessage(client, client.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -140,9 +140,10 @@ public class ServerFormController {
         new Thread(() -> {
             client2 = new Client(PORT2);
             try {
+                client2.setName(LoginForm02Controller.name);
                 client2.acceptConnection();
                 client2.setInputAndOutput();
-                processTextMessage(client2.getDataInputStream());
+                processTextMessage(client2, client2.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -150,9 +151,10 @@ public class ServerFormController {
         new Thread(() -> {
             client3 = new Client(PORT3);
             try {
+                client3.setName(LoginForm02Controller.name);
                 client3.acceptConnection();
                 client3.setInputAndOutput();
-                processTextMessage(client3.getDataInputStream());
+                processTextMessage(client3, client3.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -195,7 +197,7 @@ public class ServerFormController {
         }).start();
     }
 
-    public void btnSendOnAction(ActionEvent actionEvent) throws IOException {
+    public void btnSendOnAction(MouseEvent actionEvent) throws IOException {
         dataOutputStream0.writeUTF(txtMessage.getText().trim());
         dataOutputStream0.flush();
     }
@@ -203,21 +205,30 @@ public class ServerFormController {
     public void btnImageChooserOnAction(ActionEvent actionEvent) {
     }
 
-    public void btnExitOnAction(ActionEvent actionEvent) throws IOException {
+    public void btnExitOnAction(MouseEvent actionEvent) throws IOException {
         message = "Server Offline";
         sendTextMessage(message);
         System.exit(0);
     }
 
-    public void processTextMessage(DataInputStream dataInputStream) throws IOException {
+    public void processTextMessage(Client client, DataInputStream dataInputStream) throws IOException {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Label label = new Label(client.getName()+" Joined");
+                label.setStyle("-fx-font-family: Ubuntu; -fx-font-size: 20px;");
+                label.setLayoutY(i);
+                label.setLayoutX(50);
+                context.getChildren().add(label);
+                i += 30;
+            }
+        });
         while (!message.equals("exit")) {
             message = dataInputStream.readUTF();
             System.out.println(message);
-            String typeName = dataInputStream.getClass().getTypeName();
-            System.out.println(typeName);
 
-            if (message.equals("Client 1 : exit")) {
-                accept = null;
+            if (message.contains("exit")) {
+                client.setAccept(null);
                 return;
             }
             sendTextMessage(message);
