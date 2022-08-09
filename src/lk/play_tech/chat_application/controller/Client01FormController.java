@@ -74,7 +74,7 @@ public class Client01FormController {
 
         new Thread(() -> {
             try {
-                imgSocket = new Socket("localhost", PORT + 5);
+                imgSocket = new Socket("localhost", PORT + 1);
                 while (true) {
                     imgOutputStream = imgSocket.getOutputStream();
                     imgInputStream = imgSocket.getInputStream();

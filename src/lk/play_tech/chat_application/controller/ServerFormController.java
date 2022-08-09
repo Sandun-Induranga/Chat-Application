@@ -70,7 +70,7 @@ public class ServerFormController {
                             label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #CDB4DB; -fx-text-fill: white");
                             label.setLayoutY(i);
                             context.getChildren().add(label);
-                            i += 20;
+                            i += 30;
                         }
                     });
                 }
@@ -129,7 +129,6 @@ public class ServerFormController {
         new Thread(() -> {
             try {
                 client = new Client(PORT1);
-                client.setName(LoginForm01Controller.name);
                 client.acceptConnection();
                 client.setInputAndOutput();
                 processTextMessage(client, client.getDataInputStream());
@@ -140,7 +139,6 @@ public class ServerFormController {
         new Thread(() -> {
             client2 = new Client(PORT2);
             try {
-                client2.setName(LoginForm02Controller.name);
                 client2.acceptConnection();
                 client2.setInputAndOutput();
                 processTextMessage(client2, client2.getDataInputStream());
@@ -151,7 +149,6 @@ public class ServerFormController {
         new Thread(() -> {
             client3 = new Client(PORT3);
             try {
-                client3.setName(LoginForm02Controller.name);
                 client3.acceptConnection();
                 client3.setInputAndOutput();
                 processTextMessage(client3, client3.getDataInputStream());
@@ -215,7 +212,7 @@ public class ServerFormController {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                Label label = new Label(client.getName()+" Joined");
+                Label label = new Label("New Member Joined");
                 label.setStyle("-fx-font-family: Ubuntu; -fx-font-size: 20px;");
                 label.setLayoutY(i);
                 label.setLayoutX(50);
