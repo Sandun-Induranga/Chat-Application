@@ -40,12 +40,14 @@ public class Client03FormController {
     File file;
     OutputStream imgOutputStream;
     InputStream imgInputStream;
+    public static String name;
 
     public void initialize() {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
         msgContext.vvalueProperty().bind(context.heightProperty());
-        lblClient.setText(LoginFormController.users.get(LoginFormController.users.size()-1));
+        lblClient.setText(ServerFormController.name3);
+        name = lblClient.getText();
 
         new Thread(() -> {
             try {

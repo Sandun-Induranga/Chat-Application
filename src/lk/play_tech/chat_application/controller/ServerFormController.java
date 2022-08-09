@@ -26,7 +26,7 @@ public class ServerFormController {
     public TextField txtMessage;
 
     final int PORT = 64000;
-    final int PORT1 = 50000;
+    final static int PORT1 = 50000;
     final int PORT2 = 60000;
     final int PORT3 = 65000;
     Socket accept;
@@ -122,11 +122,10 @@ public class ServerFormController {
             }
         }).start();
         new Thread(() -> {
-            client = new Client(PORT1);
             try {
+                client = new Client(PORT1);
                 client.acceptConnection();
                 client.setInputAndOutput();
-                client.setName(LoginFormController.users.get(0));
                 processTextMessage(client, client.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -137,8 +136,7 @@ public class ServerFormController {
             try {
                 client2.acceptConnection();
                 client2.setInputAndOutput();
-                client2.setName(LoginFormController.users.get(0));
-                processTextMessage(client2,client2.getDataInputStream());
+                processTextMessage(client2, client2.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -148,7 +146,6 @@ public class ServerFormController {
             try {
                 client3.acceptConnection();
                 client3.setInputAndOutput();
-                client3.setName(LoginFormController.users.get(0));
                 processTextMessage(client3, client3.getDataInputStream());
             } catch (IOException e) {
                 e.printStackTrace();

@@ -41,12 +41,13 @@ public class Client01FormController {
     File file;
     OutputStream imgOutputStream;
     InputStream imgInputStream;
+    public static String name;
 
     public void initialize() {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
         msgContext.vvalueProperty().bind(context.heightProperty());
-        lblClient.setText(LoginFormController.users.get(LoginFormController.users.size()-1));
+        lblClient.setText(LoginForm01Controller.name);
 
         new Thread(() -> {
             try {
@@ -127,7 +128,7 @@ public class Client01FormController {
 ////        }else {
 ////
 ////        }
-        dataOutputStream.writeUTF(txtMessage.getText().trim());
+        dataOutputStream.writeUTF(lblClient.getText() + " : " + txtMessage.getText().trim());
         dataOutputStream.flush();
     }
 
