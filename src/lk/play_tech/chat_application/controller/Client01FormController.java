@@ -8,18 +8,16 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import lk.play_tech.chat_application.bo.ClientHandler;
-import lk.play_tech.chat_application.model.Client;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 public class Client01FormController {
     public ScrollPane msgContext;
@@ -114,7 +112,7 @@ public class Client01FormController {
         }).start();
     }
 
-    public void btnSendOnAction(ActionEvent actionEvent) throws IOException {
+    public void btnSendOnAction(MouseEvent actionEvent) throws IOException {
 ////        if (isImageChoose){
 //            BufferedImage image = ImageIO.read(new File(path));
 //
@@ -147,7 +145,7 @@ public class Client01FormController {
         }
     }
 
-    public void btnExitOnAction(ActionEvent actionEvent) throws IOException {
+    public void btnExitOnAction(MouseEvent actionEvent) throws IOException {
         dataOutputStream.writeUTF("exit".trim());
         dataOutputStream.flush();
         System.exit(0);

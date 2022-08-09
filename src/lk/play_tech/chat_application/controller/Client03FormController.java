@@ -8,6 +8,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -110,7 +111,7 @@ public class Client03FormController {
         }).start();
     }
 
-    public void btnSendOnAction(ActionEvent actionEvent) throws IOException {
+    public void btnSendOnAction(MouseEvent actionEvent) throws IOException {
 ////        if (isImageChoose){
 //            BufferedImage image = ImageIO.read(new File(path));
 //
@@ -143,7 +144,7 @@ public class Client03FormController {
         }
     }
 
-    public void btnExitOnAction(ActionEvent actionEvent) throws IOException {
+    public void btnExitOnAction(MouseEvent actionEvent) throws IOException {
         dataOutputStream.writeUTF("exit".trim());
         dataOutputStream.flush();
         System.exit(0);
