@@ -41,7 +41,6 @@ public class Client01FormController {
     File file;
     OutputStream imgOutputStream;
     InputStream imgInputStream;
-    public static String name;
 
     public void initialize() {
         Platform.setImplicitExit(false);
@@ -63,10 +62,10 @@ public class Client01FormController {
                         @Override
                         public void run() {
                             Label label = new Label(message);
-                            label.setStyle("-fx-font-size: 20px");
+                            label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: blue; -fx-text-fill: white");
                             label.setLayoutY(i);
                             context.getChildren().add(label);
-                            i += 20;
+                            i += 30;
                         }
                     });
                 }

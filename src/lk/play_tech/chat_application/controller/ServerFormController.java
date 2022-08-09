@@ -47,7 +47,16 @@ public class ServerFormController {
         new Thread(() -> {
             try {
                 socket = new Socket("localhost", PORT);
-
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Label label = new Label("Server Started");
+                        label.setStyle("-fx-text-fill: white; -fx-font-size: 20px; -fx-background-color: green; -fx-background-radius: 2");
+                        label.setLayoutY(i);
+                        context.getChildren().add(label);
+                        i += 20;
+                    }
+                });
                 while (true) {
                     dataOutputStream0 = new DataOutputStream(socket.getOutputStream());
                     dataInputStream0 = new DataInputStream(socket.getInputStream());
@@ -58,7 +67,7 @@ public class ServerFormController {
                         @Override
                         public void run() {
                             Label label = new Label(message);
-                            label.setStyle("-fx-font-size: 20px");
+                            label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: blue; -fx-text-fill: white");
                             label.setLayoutY(i);
                             context.getChildren().add(label);
                             i += 20;
@@ -120,6 +129,8 @@ public class ServerFormController {
             try {
                 client = new Client(PORT1);
                 client.acceptConnection();
+                dataOutputStream0.writeUTF("New member Joined".trim());
+                dataOutputStream0.flush();
                 client.setInputAndOutput();
                 processTextMessage(client.getDataInputStream());
             } catch (IOException e) {

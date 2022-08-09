@@ -11,14 +11,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import lk.play_tech.chat_application.bo.ClientHandler;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 public class Client03FormController {
     public ScrollPane msgContext;
@@ -35,8 +33,6 @@ public class Client03FormController {
     int i = 10;
     String path = "";
     public static boolean isImageChoose = false;
-    ObjectOutputStream oos;
-    ObjectInputStream ois;
     File file;
     OutputStream imgOutputStream;
     InputStream imgInputStream;
@@ -63,10 +59,10 @@ public class Client03FormController {
                         @Override
                         public void run() {
                             Label label = new Label(message);
-                            label.setStyle("-fx-font-size: 20px");
+                            label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: blue; -fx-text-fill: white");
                             label.setLayoutY(i);
                             context.getChildren().add(label);
-                            i += 20;
+                            i += 30;
                         }
                     });
                 }
