@@ -153,8 +153,11 @@ public class Client01FormController {
     }
 
     public void btnExitOnAction(MouseEvent actionEvent) throws IOException {
-        dataOutputStream.writeUTF("exit".trim());
-        dataOutputStream.flush();
+        if (socket!=null){
+            dataOutputStream.writeUTF("exit".trim());
+            dataOutputStream.flush();
+            System.exit(0);
+        }
         System.exit(0);
     }
 
@@ -175,15 +178,12 @@ public class Client01FormController {
     }
 
     public void btnEmojiOnAction(MouseEvent mouseEvent) {
-        if (isUsed){
+        if (isUsed) {
             emoji.getChildren().clear();
             isUsed = false;
             return;
         }
         isUsed = true;
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(new Stage());
         VBox dialogVbox = new VBox(20);
         ImageView smile = new ImageView(new Image("lk/play_tech/chat_application/assets/smile.png"));
         smile.setFitWidth(30);
@@ -198,18 +198,14 @@ public class Client01FormController {
         sadFace.setFitHeight(30);
         dialogVbox.getChildren().add(sadFace);
         smile.setOnMouseClicked(event -> {
-            txtMessage.setText(txtMessage.getText()+"☺");
+            txtMessage.setText(txtMessage.getText() + "☺");
         });
         heart.setOnMouseClicked(event -> {
-            txtMessage.setText(txtMessage.getText()+"♥");
+            txtMessage.setText(txtMessage.getText() + "♥");
         });
         sadFace.setOnMouseClicked(event -> {
-            txtMessage.setText(txtMessage.getText()+"☹");
+            txtMessage.setText(txtMessage.getText() + "☹");
         });
         emoji.getChildren().add(dialogVbox);
-//        Scene dialogScene = new Scene(dialogVbox, 300, 200);
-//        dialog.setScene(dialogScene);
-//        dialog.alwaysOnTopProperty();
-//        dialog.show();
     }
 }

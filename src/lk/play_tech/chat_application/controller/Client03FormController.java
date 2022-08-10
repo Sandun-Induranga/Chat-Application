@@ -145,8 +145,11 @@ public class Client03FormController {
     }
 
     public void btnExitOnAction(MouseEvent actionEvent) throws IOException {
-        dataOutputStream.writeUTF("exit".trim());
-        dataOutputStream.flush();
+        if (socket!=null){
+            dataOutputStream.writeUTF("exit".trim());
+            dataOutputStream.flush();
+            System.exit(0);
+        }
         System.exit(0);
     }
 
