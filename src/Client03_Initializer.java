@@ -14,6 +14,7 @@ public class Client03_Initializer extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         primaryStage.setScene(new Scene(FXMLLoader.load(getClass().getResource("lk/play_tech/chat_application/view/login-form-03.fxml"))));
+        primaryStage.setAlwaysOnTop(true);
         primaryStage.show();
     }
 }

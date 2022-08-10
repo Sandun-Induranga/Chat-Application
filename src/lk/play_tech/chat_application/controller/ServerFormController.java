@@ -44,6 +44,7 @@ public class ServerFormController {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
         msgContext.vvalueProperty().bind(context.heightProperty());
+
 //        new Thread(() -> {
 //            try {
 //                Socket imgSocket = new Socket("localhost", PORT + 1);
@@ -223,16 +224,15 @@ public class ServerFormController {
                 i += 30;
             }
         });
-        while (!message.equals("exit")) {
+        while (!message.contains("exit")) {
             message = dataInputStream.readUTF();
             System.out.println(message);
-
-            if (message.contains("exit")) {
-                client.setAccept(null);
-                return;
-            }
             sendTextMessage(message);
         }
+        client.setAccept(null);
+        client.setImgSocket(null);
+        dataOutputStream0.writeUTF("\t\t"+client.getName()+" left".trim());
+        dataOutputStream0.flush();
     }
 
     private void sendTextMessage(String message) throws IOException {
