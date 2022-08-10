@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -26,6 +27,7 @@ public class Client03FormController {
 
     final int PORT = 65000;
     public Label lblClient;
+    public AnchorPane emoji;
     Socket socket;
     Socket imgSocket;
     DataInputStream dataInputStream;
@@ -38,6 +40,7 @@ public class Client03FormController {
     OutputStream imgOutputStream;
     InputStream imgInputStream;
     public static String name;
+    boolean isUsed = false;
 
     public void initialize() {
         Platform.setImplicitExit(false);
@@ -167,5 +170,37 @@ public class Client03FormController {
         imgOutputStream.flush();
         System.out.println("Flushed: " + System.currentTimeMillis());
         System.out.println("Closing: " + System.currentTimeMillis());
+    }
+
+    public void btnEmojiOnAction(MouseEvent mouseEvent) {
+        if (isUsed) {
+            emoji.getChildren().clear();
+            isUsed = false;
+            return;
+        }
+        isUsed = true;
+        VBox dialogVbox = new VBox(20);
+        ImageView smile = new ImageView(new Image("lk/play_tech/chat_application/assets/smile.png"));
+        smile.setFitWidth(30);
+        smile.setFitHeight(30);
+        dialogVbox.getChildren().add(smile);
+        ImageView heart = new ImageView(new Image("lk/play_tech/chat_application/assets/heart.png"));
+        heart.setFitWidth(30);
+        heart.setFitHeight(30);
+        dialogVbox.getChildren().add(heart);
+        ImageView sadFace = new ImageView(new Image("lk/play_tech/chat_application/assets/sad-face.jpeg"));
+        sadFace.setFitWidth(30);
+        sadFace.setFitHeight(30);
+        dialogVbox.getChildren().add(sadFace);
+        smile.setOnMouseClicked(event -> {
+            txtMessage.setText(txtMessage.getText() + "☺");
+        });
+        heart.setOnMouseClicked(event -> {
+            txtMessage.setText(txtMessage.getText() + "♥");
+        });
+        sadFace.setOnMouseClicked(event -> {
+            txtMessage.setText(txtMessage.getText() + "☹");
+        });
+        emoji.getChildren().add(dialogVbox);
     }
 }
