@@ -46,6 +46,8 @@ public class Client03FormController {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
         msgContext.vvalueProperty().bind(context.heightProperty());
+        msgContext.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        msgContext.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         lblClient.setText(LoginForm03Controller.name);
         name = lblClient.getText();
 

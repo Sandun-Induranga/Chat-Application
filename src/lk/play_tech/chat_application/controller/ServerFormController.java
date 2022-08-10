@@ -43,6 +43,8 @@ public class ServerFormController {
     public void initialize() {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
+        msgContext.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        msgContext.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         msgContext.vvalueProperty().bind(context.heightProperty());
 
 //        new Thread(() -> {
@@ -210,6 +212,7 @@ public class ServerFormController {
     public void btnSendOnAction(MouseEvent actionEvent) throws IOException {
         dataOutputStream0.writeUTF(txtMessage.getText().trim());
         dataOutputStream0.flush();
+        txtMessage.clear();
     }
 
     public void btnImageChooserOnAction(ActionEvent actionEvent) {
