@@ -126,42 +126,42 @@ public class ServerFormController {
                 e.printStackTrace();
             }
         }).start();
-        new Thread(() -> {
-            try {
-                serverClient.acceptImgConnection(PORT + 1);
-                serverClient.setImageInputAndOutput();
-                processImage(serverClient.getImgInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-        new Thread(() -> {
-            try {
-                client.acceptImgConnection(PORT1 + 1);
-                client.setImageInputAndOutput();
-                processImage(client.getImgInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-        new Thread(() -> {
-            try {
-                client2.acceptImgConnection(PORT2 + 1);
-                client2.setImageInputAndOutput();
-                processImage(client2.getImgInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-        new Thread(() -> {
-            try {
-                client3.acceptImgConnection(PORT3 + 1);
-                client3.setImageInputAndOutput();
-                processImage(client3.getImgInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
+//        new Thread(() -> {
+//            try {
+//                serverClient.acceptImgConnection(PORT + 1);
+//                serverClient.setImageInputAndOutput();
+//                processImage(serverClient.getImgInputStream());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
+//        new Thread(() -> {
+//            try {
+//                client.acceptImgConnection(PORT1 + 1);
+//                client.setImageInputAndOutput();
+//                processImage(client.getImgInputStream());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
+//        new Thread(() -> {
+//            try {
+//                client2.acceptImgConnection(PORT2 + 1);
+//                client2.setImageInputAndOutput();
+//                processImage(client2.getImgInputStream());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
+//        new Thread(() -> {
+//            try {
+//                client3.acceptImgConnection(PORT3 + 1);
+//                client3.setImageInputAndOutput();
+//                processImage(client3.getImgInputStream());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
         new Thread(() -> {
             try {
                 socket = new Socket("localhost", PORT);
@@ -224,15 +224,18 @@ public class ServerFormController {
                 i += 30;
             }
         });
-        while (!message.contains("exit")) {
+        while (true) {
             message = dataInputStream.readUTF();
             System.out.println(message);
             sendTextMessage(message);
+            if (message.equals("exit")){
+                client.setAccept(null);
+                client.setImgSocket(null);
+                dataOutputStream0.writeUTF("\t\t"+client.getName()+" left\t\t.".trim());
+                dataOutputStream0.flush();
+                return;
+            }
         }
-        client.setAccept(null);
-        client.setImgSocket(null);
-        dataOutputStream0.writeUTF("\t\t"+client.getName()+" left".trim());
-        dataOutputStream0.flush();
     }
 
     private void sendTextMessage(String message) throws IOException {
