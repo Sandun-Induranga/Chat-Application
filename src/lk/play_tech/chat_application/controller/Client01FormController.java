@@ -3,6 +3,8 @@ package lk.play_tech.chat_application.controller;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -10,7 +12,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
@@ -60,7 +65,7 @@ public class Client01FormController {
                         @Override
                         public void run() {
                             Label label = new Label(message);
-                            label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #CDB4DB; -fx-text-fill: white");
+                            label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #CDB4DB; -fx-text-fill: #5c5c5c");
                             label.setLayoutY(i);
                             context.getChildren().add(label);
                             i += 30;
@@ -165,5 +170,22 @@ public class Client01FormController {
         imgOutputStream.flush();
         System.out.println("Flushed: " + System.currentTimeMillis());
         System.out.println("Closing: " + System.currentTimeMillis());
+    }
+
+    public void btnEmojiOnAction(MouseEvent mouseEvent) {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.NONE);
+        dialog.initOwner(new Stage());
+        VBox dialogVbox = new VBox(20);
+        ImageView smile = new ImageView(new Image("lk/play_tech/chat_application/assets/smile.png"));
+        smile.setFitWidth(30);
+        smile.setFitHeight(30);
+        dialogVbox.getChildren().add(smile);
+        smile.setOnMouseClicked(event -> {
+            txtMessage.setText(txtMessage.getText()+"☺");
+        });
+        Scene dialogScene = new Scene(dialogVbox, 300, 200);
+        dialog.setScene(dialogScene);
+        dialog.show();
     }
 }

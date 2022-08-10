@@ -84,7 +84,7 @@ public class ServerFormController {
         new Thread(() -> {
             serverClient = new Client(PORT);
             try {
-//                serverClient.setName("Admin");
+                serverClient.setName("You ");
                 serverClient.acceptConnection();
                 serverClient.setInputAndOutput();
                 processTextMessage(serverClient, serverClient.getDataInputStream());
@@ -95,6 +95,7 @@ public class ServerFormController {
         new Thread(() -> {
             try {
                 client = new Client(PORT1);
+                client.setName("Client 01");
                 client.acceptConnection();
                 client.setInputAndOutput();
                 processTextMessage(client, client.getDataInputStream());
@@ -105,6 +106,7 @@ public class ServerFormController {
         new Thread(() -> {
             client2 = new Client(PORT2);
             try {
+                client2.setName("Client 02");
                 client2.acceptConnection();
                 client2.setInputAndOutput();
                 processTextMessage(client2, client2.getDataInputStream());
@@ -115,6 +117,7 @@ public class ServerFormController {
         new Thread(() -> {
             client3 = new Client(PORT3);
             try {
+                client3.setName("Client 03");
                 client3.acceptConnection();
                 client3.setInputAndOutput();
                 processTextMessage(client3, client3.getDataInputStream());
@@ -181,7 +184,7 @@ public class ServerFormController {
                         @Override
                         public void run() {
                             Label label = new Label(message);
-                            label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #CDB4DB; -fx-text-fill: white");
+                            label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #CDB4DB; -fx-text-fill: #5c5c5c");
                             label.setLayoutY(i);
                             context.getChildren().add(label);
                             i += 30;
@@ -212,7 +215,7 @@ public class ServerFormController {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                Label label = new Label("New Member Joined");
+                Label label = new Label(client.getName()+" Joined");
                 label.setStyle("-fx-font-family: Ubuntu; -fx-font-size: 20px;");
                 label.setLayoutY(i);
                 label.setLayoutX(50);
