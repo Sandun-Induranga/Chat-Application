@@ -44,40 +44,6 @@ public class ServerFormController {
         Platform.setImplicitExit(false);
         msgContext.setContent(context);
         msgContext.vvalueProperty().bind(context.heightProperty());
-        new Thread(() -> {
-            try {
-                socket = new Socket("localhost", PORT);
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        Label label = new Label("Server Started...");
-                        label.setStyle("-fx-font-family: Ubuntu; -fx-font-size: 20px;");
-                        label.setLayoutY(i);
-                        context.getChildren().add(label);
-                        i += 30;
-                    }
-                });
-                while (true) {
-                    dataOutputStream0 = new DataOutputStream(socket.getOutputStream());
-                    dataInputStream0 = new DataInputStream(socket.getInputStream());
-
-                    message = dataInputStream0.readUTF();
-                    System.out.println(message);
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            Label label = new Label(message);
-                            label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #CDB4DB; -fx-text-fill: white");
-                            label.setLayoutY(i);
-                            context.getChildren().add(label);
-                            i += 30;
-                        }
-                    });
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
 //        new Thread(() -> {
 //            try {
 //                Socket imgSocket = new Socket("localhost", PORT + 1);
@@ -118,7 +84,7 @@ public class ServerFormController {
         new Thread(() -> {
             serverClient = new Client(PORT);
             try {
-                serverClient.setName("Admin");
+//                serverClient.setName("Admin");
                 serverClient.acceptConnection();
                 serverClient.setInputAndOutput();
                 processTextMessage(serverClient, serverClient.getDataInputStream());
@@ -188,6 +154,40 @@ public class ServerFormController {
                 client3.acceptImgConnection(PORT3 + 1);
                 client3.setImageInputAndOutput();
                 processImage(client3.getImgInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        new Thread(() -> {
+            try {
+                socket = new Socket("localhost", PORT);
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Label label = new Label("Server Started...");
+                        label.setStyle("-fx-font-family: Ubuntu; -fx-font-size: 20px;");
+                        label.setLayoutY(i);
+                        context.getChildren().add(label);
+                        i += 30;
+                    }
+                });
+                while (true) {
+                    dataOutputStream0 = new DataOutputStream(socket.getOutputStream());
+                    dataInputStream0 = new DataInputStream(socket.getInputStream());
+
+                    message = dataInputStream0.readUTF();
+                    System.out.println(message);
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            Label label = new Label(message);
+                            label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #CDB4DB; -fx-text-fill: white");
+                            label.setLayoutY(i);
+                            context.getChildren().add(label);
+                            i += 30;
+                        }
+                    });
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
