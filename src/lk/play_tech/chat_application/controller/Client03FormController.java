@@ -58,6 +58,8 @@ public class Client03FormController {
                 while (true) {
                     dataOutputStream = new DataOutputStream(socket.getOutputStream());
                     dataInputStream = new DataInputStream(socket.getInputStream());
+                    imgOutputStream = socket.getOutputStream();
+                    imgInputStream = socket.getInputStream();
                     message = dataInputStream.readUTF();
                     System.out.println(message);
 

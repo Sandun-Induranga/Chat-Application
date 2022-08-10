@@ -19,6 +19,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
@@ -43,8 +45,8 @@ public class Client01FormController {
     ObjectOutputStream oos;
     ObjectInputStream ois;
     File file;
-    OutputStream imgOutputStream;
-    InputStream imgInputStream;
+    ImageOutputStream imgOutputStream;
+    ImageInputStream imgInputStream;
     boolean isUsed = false;
 
     public void initialize() {
@@ -58,7 +60,8 @@ public class Client01FormController {
         new Thread(() -> {
             try {
                 socket = new Socket("localhost", PORT);
-
+                imgOutputStream = (ImageOutputStream) socket.getOutputStream();
+                imgInputStream = (ImageInputStream) socket.getInputStream();
                 while (true) {
                     dataOutputStream = new DataOutputStream(socket.getOutputStream());
                     dataInputStream = new DataInputStream(socket.getInputStream());

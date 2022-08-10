@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.imageio.stream.ImageInputStream;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -21,11 +22,11 @@ public class Client {
     private Socket imgSocket;
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
-    private InputStream imgInputStream;
-    private OutputStream imgOutputStream;
+    private ImageInputStream imgInputStream;
+    private ImageInputStream imgOutputStream;
     private String message = "";
 
-    public Client(int port){
+    public Client(int port) {
         this.port = port;
     }
 
@@ -33,6 +34,7 @@ public class Client {
         serverSocket = new ServerSocket(port);
         this.accept = serverSocket.accept();
     }
+
     public void acceptImgConnection(int port) throws IOException {
         serverSocket = new ServerSocket(port);
         this.imgSocket = serverSocket.accept();
@@ -41,10 +43,13 @@ public class Client {
     public void setInputAndOutput() throws IOException {
         this.dataInputStream = new DataInputStream(accept.getInputStream());
         this.dataOutputStream = new DataOutputStream(accept.getOutputStream());
+        this.imgInputStream = (ImageInputStream) accept.getInputStream();
+        this.imgOutputStream = (ImageInputStream) accept.getOutputStream();
     }
+
     public void setImageInputAndOutput() throws IOException {
-        this.imgInputStream = imgSocket.getInputStream();
-        this.imgOutputStream = imgSocket.getOutputStream();
+        this.imgInputStream = (ImageInputStream) imgSocket.getInputStream();
+        this.imgOutputStream = (ImageInputStream) imgSocket.getOutputStream();
     }
 
     public void processTextMessage() throws IOException {

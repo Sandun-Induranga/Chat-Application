@@ -13,6 +13,8 @@ import javafx.scene.layout.AnchorPane;
 import lk.play_tech.chat_application.model.Client;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
@@ -29,8 +31,8 @@ public class ServerFormController {
     Socket socket;
     DataInputStream dataInputStream0;
     DataOutputStream dataOutputStream0;
-    InputStream imgInputStream;
-    OutputStream imgOutputStream;
+    ImageInputStream imgInputStream;
+    ImageOutputStream imgOutputStream;
     String message = "";
     int i = 0;
     public AnchorPane context = new AnchorPane();
@@ -85,13 +87,13 @@ public class ServerFormController {
 //            }
 //        }).start();
         new Thread(() -> {
-            while (true){
+            while (true) {
                 serverClient = new Client(PORT);
                 try {
                     serverClient.setName("You ");
                     serverClient.acceptConnection();
                     serverClient.setInputAndOutput();
-                    processTextMessage(serverClient, serverClient.getDataInputStream());
+                    processTextMessage(serverClient, serverClient.getDataInputStream(), serverClient.getImgInputStream());
                     client = null;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -99,39 +101,39 @@ public class ServerFormController {
             }
         }).start();
         new Thread(() -> {
-            while (true){
+            while (true) {
                 try {
                     client = new Client(PORT1);
                     client.setName("Client 01");
                     client.acceptConnection();
                     client.setInputAndOutput();
-                    processTextMessage(client, client.getDataInputStream());
+                    processTextMessage(client, client.getDataInputStream(), client.getImgInputStream());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
         new Thread(() -> {
-            while (true){
+            while (true) {
                 client2 = new Client(PORT2);
                 try {
                     client2.setName("Client 02");
                     client2.acceptConnection();
                     client2.setInputAndOutput();
-                    processTextMessage(client2, client2.getDataInputStream());
+                    processTextMessage(client2, client2.getDataInputStream(), client2.getImgInputStream());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
         new Thread(() -> {
-            while (true){
+            while (true) {
                 client3 = new Client(PORT3);
                 try {
                     client3.setName("Client 03");
                     client3.acceptConnection();
                     client3.setInputAndOutput();
-                    processTextMessage(client3, client3.getDataInputStream());
+                    processTextMessage(client3, client3.getDataInputStream(), client3.getImgInputStream());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -189,7 +191,8 @@ public class ServerFormController {
                 while (true) {
                     dataOutputStream0 = new DataOutputStream(socket.getOutputStream());
                     dataInputStream0 = new DataInputStream(socket.getInputStream());
-
+                    imgOutputStream = (ImageOutputStream) socket.getInputStream();
+                    imgInputStream = (ImageInputStream) socket.getInputStream();
                     message = dataInputStream0.readUTF();
                     System.out.println(message);
                     Platform.runLater(new Runnable() {
@@ -224,7 +227,7 @@ public class ServerFormController {
         System.exit(0);
     }
 
-    public void processTextMessage(Client client, DataInputStream dataInputStream) throws IOException {
+    public void processTextMessage(Client client, DataInputStream dataInputStream, ImageInputStream imgInputStream) throws IOException {
 //        Platform.runLater(new Runnable() {
 //            @Override
 //            public void run() {
@@ -236,18 +239,26 @@ public class ServerFormController {
 //                i += 30;
 //            }
 //        });
-        if (dataOutputStream0!=null){
-            dataOutputStream0.writeUTF("👋\t\t"+client.getName()+" Joined\t\t👋".trim());
+        if (dataOutputStream0 != null) {
+            dataOutputStream0.writeUTF("👋\t\t" + client.getName() + " Joined\t\t👋".trim());
             dataOutputStream0.flush();
         }
 
         while (true) {
+            if (imgInputStream != null) {
+                try {
+                    processImage(imgInputStream);
+                    continue;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             message = dataInputStream.readUTF();
             System.out.println(message);
-            if (message.equals("exit")){
+            if (message.equals("exit")) {
                 client.setAccept(null);
                 client.setImgSocket(null);
-                dataOutputStream0.writeUTF("👋\t\t\t"+client.getName()+" left\t\t\t👋".trim());
+                dataOutputStream0.writeUTF("👋\t\t\t" + client.getName() + " left\t\t\t👋".trim());
                 dataOutputStream0.flush();
                 return;
             }
@@ -274,51 +285,50 @@ public class ServerFormController {
         }
     }
 
-    private void processImage(InputStream inputStream) throws IOException {
-        while (true) {
-            byte[] sizeAr = new byte[4];
-            inputStream.read(sizeAr);
-            int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
-            byte[] imageAr = new byte[size];
-            inputStream.read(imageAr);
-            BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
+    private void processImage(ImageInputStream inputStream) throws IOException {
+        byte[] sizeAr = new byte[4];
+        inputStream.read(sizeAr);
+        int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+        byte[] imageAr = new byte[size];
+        inputStream.read(imageAr);
+        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
 
-            System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
-            ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
+        System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+        ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
 
-            BufferedImage sendImage = ImageIO.read(new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
+        BufferedImage sendImage = ImageIO.read(new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
 
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ImageIO.write(sendImage, "jpg", byteArrayOutputStream);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageIO.write(sendImage, "jpg", byteArrayOutputStream);
 
-            byte[] sendSize = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-            sendImgMessage(sendSize, byteArrayOutputStream);
-            System.out.println("Flushed: " + System.currentTimeMillis());
-            System.out.println("Closing: " + System.currentTimeMillis());
-            sendImgMessage(sendSize, byteArrayOutputStream);
-        }
+        byte[] sendSize = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+        sendImgMessage(sendSize, byteArrayOutputStream);
+        System.out.println("Flushed: " + System.currentTimeMillis());
+        System.out.println("Closing: " + System.currentTimeMillis());
+        sendImgMessage(sendSize, byteArrayOutputStream);
     }
 
     private void sendImgMessage(byte[] sendSize, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
         if (serverClient.getImgSocket() != null) {
-            serverClient.getImgOutputStream().write(sendSize);
-            serverClient.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
+//            serverClient.getImgOutputStream().write(sendSize);
+//            serverClient.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
+//            serverClient.getImgOutputStream().flush();
             serverClient.getImgOutputStream().flush();
         }
         if (client.getImgSocket() != null) {
-            client.getImgOutputStream().write(sendSize);
-            client.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
+//            client.getImgOutputStream().write(sendSize);
+//            client.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
             client.getImgOutputStream().flush();
             System.out.println("done");
         }
         if (client2.getImgSocket() != null) {
-            client2.getImgOutputStream().write(sendSize);
-            client2.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
+//            client2.getImgOutputStream().write(sendSize);
+//            client2.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
             client2.getImgOutputStream().flush();
         }
         if (client3.getImgSocket() != null) {
-            client3.getImgOutputStream().write(sendSize);
-            client3.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
+//            client3.getImgOutputStream().write(sendSize);
+//            client3.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
             client3.getImgOutputStream().flush();
         }
     }
