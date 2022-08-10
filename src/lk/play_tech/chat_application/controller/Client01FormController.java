@@ -31,6 +31,7 @@ public class Client01FormController {
 
     final int PORT = 50000;
     public Label lblClient;
+    public AnchorPane emoji;
     Socket socket;
     Socket imgSocket;
     DataInputStream dataInputStream;
@@ -44,6 +45,7 @@ public class Client01FormController {
     File file;
     OutputStream imgOutputStream;
     InputStream imgInputStream;
+    boolean isUsed = false;
 
     public void initialize() {
         Platform.setImplicitExit(false);
@@ -173,19 +175,41 @@ public class Client01FormController {
     }
 
     public void btnEmojiOnAction(MouseEvent mouseEvent) {
+        if (isUsed){
+            emoji.getChildren().clear();
+            isUsed = false;
+            return;
+        }
+        isUsed = true;
         final Stage dialog = new Stage();
-        dialog.initModality(Modality.NONE);
+        dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(new Stage());
         VBox dialogVbox = new VBox(20);
         ImageView smile = new ImageView(new Image("lk/play_tech/chat_application/assets/smile.png"));
         smile.setFitWidth(30);
         smile.setFitHeight(30);
         dialogVbox.getChildren().add(smile);
+        ImageView heart = new ImageView(new Image("lk/play_tech/chat_application/assets/heart.png"));
+        heart.setFitWidth(30);
+        heart.setFitHeight(30);
+        dialogVbox.getChildren().add(heart);
+        ImageView sadFace = new ImageView(new Image("lk/play_tech/chat_application/assets/sad-face.jpeg"));
+        sadFace.setFitWidth(30);
+        sadFace.setFitHeight(30);
+        dialogVbox.getChildren().add(sadFace);
         smile.setOnMouseClicked(event -> {
             txtMessage.setText(txtMessage.getText()+"☺");
         });
-        Scene dialogScene = new Scene(dialogVbox, 300, 200);
-        dialog.setScene(dialogScene);
-        dialog.show();
+        heart.setOnMouseClicked(event -> {
+            txtMessage.setText(txtMessage.getText()+"♥");
+        });
+        sadFace.setOnMouseClicked(event -> {
+            txtMessage.setText(txtMessage.getText()+"☹");
+        });
+        emoji.getChildren().add(dialogVbox);
+//        Scene dialogScene = new Scene(dialogVbox, 300, 200);
+//        dialog.setScene(dialogScene);
+//        dialog.alwaysOnTopProperty();
+//        dialog.show();
     }
 }

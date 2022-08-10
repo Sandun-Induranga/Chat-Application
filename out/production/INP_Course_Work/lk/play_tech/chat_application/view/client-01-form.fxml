@@ -35,5 +35,6 @@
             </FontAwesomeIconView>
          </children></AnchorPane>
       <FontAwesomeIconView fill="#efefef" glyphName="POWER_OFF" layoutX="35.0" layoutY="61.0" onMouseClicked="#btnExitOnAction" size="40" />
+      <AnchorPane fx:id="emoji" layoutY="385.0" prefHeight="200.0" prefWidth="325.0" />
    </children>
 </AnchorPane>
