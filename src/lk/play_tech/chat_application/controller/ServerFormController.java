@@ -83,47 +83,56 @@ public class ServerFormController {
 //            }
 //        }).start();
         new Thread(() -> {
-            serverClient = new Client(PORT);
-            try {
-                serverClient.setName("You ");
-                serverClient.acceptConnection();
-                serverClient.setInputAndOutput();
-                processTextMessage(serverClient, serverClient.getDataInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
+            while (true){
+                serverClient = new Client(PORT);
+                try {
+                    serverClient.setName("You ");
+                    serverClient.acceptConnection();
+                    serverClient.setInputAndOutput();
+                    processTextMessage(serverClient, serverClient.getDataInputStream());
+                    client = null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }).start();
         new Thread(() -> {
-            try {
-                client = new Client(PORT1);
-                client.setName("Client 01");
-                client.acceptConnection();
-                client.setInputAndOutput();
-                processTextMessage(client, client.getDataInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
+            while (true){
+                try {
+                    client = new Client(PORT1);
+                    client.setName("Client 01");
+                    client.acceptConnection();
+                    client.setInputAndOutput();
+                    processTextMessage(client, client.getDataInputStream());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }).start();
         new Thread(() -> {
-            client2 = new Client(PORT2);
-            try {
-                client2.setName("Client 02");
-                client2.acceptConnection();
-                client2.setInputAndOutput();
-                processTextMessage(client2, client2.getDataInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
+            while (true){
+                client2 = new Client(PORT2);
+                try {
+                    client2.setName("Client 02");
+                    client2.acceptConnection();
+                    client2.setInputAndOutput();
+                    processTextMessage(client2, client2.getDataInputStream());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }).start();
         new Thread(() -> {
-            client3 = new Client(PORT3);
-            try {
-                client3.setName("Client 03");
-                client3.acceptConnection();
-                client3.setInputAndOutput();
-                processTextMessage(client3, client3.getDataInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
+            while (true){
+                client3 = new Client(PORT3);
+                try {
+                    client3.setName("Client 03");
+                    client3.acceptConnection();
+                    client3.setInputAndOutput();
+                    processTextMessage(client3, client3.getDataInputStream());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }).start();
 //        new Thread(() -> {
@@ -213,28 +222,33 @@ public class ServerFormController {
     }
 
     public void processTextMessage(Client client, DataInputStream dataInputStream) throws IOException {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                Label label = new Label(client.getName()+" Joined");
-                label.setStyle("-fx-font-family: Ubuntu; -fx-font-size: 20px;");
-                label.setLayoutY(i);
-                label.setLayoutX(50);
-                context.getChildren().add(label);
-                i += 30;
-            }
-        });
+//        Platform.runLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                Label label = new Label(client.getName()+" Joined");
+//                label.setStyle("-fx-font-family: Ubuntu; -fx-font-size: 20px;");
+//                label.setLayoutY(i);
+//                label.setLayoutX(50);
+//                context.getChildren().add(label);
+//                i += 30;
+//            }
+//        });
+        if (dataOutputStream0!=null){
+            dataOutputStream0.writeUTF("👋\t\t"+client.getName()+" Joined\t\t👋".trim());
+            dataOutputStream0.flush();
+        }
+
         while (true) {
             message = dataInputStream.readUTF();
             System.out.println(message);
-            sendTextMessage(message);
             if (message.equals("exit")){
                 client.setAccept(null);
                 client.setImgSocket(null);
-                dataOutputStream0.writeUTF("\t\t"+client.getName()+" left\t\t.".trim());
+                dataOutputStream0.writeUTF("👋\t\t\t"+client.getName()+" left\t\t\t👋".trim());
                 dataOutputStream0.flush();
                 return;
             }
+            sendTextMessage(message);
         }
     }
 
