@@ -93,7 +93,7 @@ public class ServerFormController {
                     serverClient.setName("You ");
                     serverClient.acceptConnection();
                     serverClient.setInputAndOutput();
-                    processTextMessage(serverClient, serverClient.getDataInputStream(), serverClient.getImgInputStream());
+                    processTextMessage(serverClient, serverClient.getDataInputStream());
                     client = null;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -107,9 +107,8 @@ public class ServerFormController {
                     client.setName("Client 01");
                     client.acceptConnection();
                     client.setInputAndOutput();
-                    processTextMessage(client, client.getDataInputStream(), client.getImgInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    processTextMessage(client, client.getDataInputStream());
+                } catch (IOException ignored) {
                 }
             }
         }).start();
@@ -120,7 +119,7 @@ public class ServerFormController {
                     client2.setName("Client 02");
                     client2.acceptConnection();
                     client2.setInputAndOutput();
-                    processTextMessage(client2, client2.getDataInputStream(), client2.getImgInputStream());
+                    processTextMessage(client2, client2.getDataInputStream());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -133,9 +132,8 @@ public class ServerFormController {
                     client3.setName("Client 03");
                     client3.acceptConnection();
                     client3.setInputAndOutput();
-                    processTextMessage(client3, client3.getDataInputStream(), client3.getImgInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    processTextMessage(client3, client3.getDataInputStream());
+                } catch (IOException ignored) {
                 }
             }
         }).start();
@@ -191,8 +189,6 @@ public class ServerFormController {
                 while (true) {
                     dataOutputStream0 = new DataOutputStream(socket.getOutputStream());
                     dataInputStream0 = new DataInputStream(socket.getInputStream());
-                    imgOutputStream = (ImageOutputStream) socket.getInputStream();
-                    imgInputStream = (ImageInputStream) socket.getInputStream();
                     message = dataInputStream0.readUTF();
                     System.out.println(message);
                     Platform.runLater(new Runnable() {
@@ -227,7 +223,7 @@ public class ServerFormController {
         System.exit(0);
     }
 
-    public void processTextMessage(Client client, DataInputStream dataInputStream, ImageInputStream imgInputStream) throws IOException {
+    public void processTextMessage(Client client, DataInputStream dataInputStream) throws IOException {
 //        Platform.runLater(new Runnable() {
 //            @Override
 //            public void run() {
@@ -240,19 +236,11 @@ public class ServerFormController {
 //            }
 //        });
         if (dataOutputStream0 != null) {
-            dataOutputStream0.writeUTF("👋\t\t" + client.getName() + " Joined\t\t👋".trim());
+            dataOutputStream0.writeUTF("👋\t\t\t" + client.getName() + "  Joined\t\t\t👋".trim());
             dataOutputStream0.flush();
         }
 
         while (true) {
-            if (imgInputStream != null) {
-                try {
-                    processImage(imgInputStream);
-                    continue;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
             message = dataInputStream.readUTF();
             System.out.println(message);
             if (message.equals("exit")) {
@@ -260,6 +248,7 @@ public class ServerFormController {
                 client.setImgSocket(null);
                 dataOutputStream0.writeUTF("👋\t\t\t" + client.getName() + " left\t\t\t👋".trim());
                 dataOutputStream0.flush();
+                client.setServerSocket(null);
                 return;
             }
             sendTextMessage(message);
@@ -285,7 +274,8 @@ public class ServerFormController {
         }
     }
 
-    private void processImage(ImageInputStream inputStream) throws IOException {
+    private void processImage(DataInputStream inputStream) throws IOException {
+        System.out.println("come");
         byte[] sizeAr = new byte[4];
         inputStream.read(sizeAr);
         int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
@@ -309,27 +299,27 @@ public class ServerFormController {
     }
 
     private void sendImgMessage(byte[] sendSize, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
-        if (serverClient.getImgSocket() != null) {
-//            serverClient.getImgOutputStream().write(sendSize);
-//            serverClient.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
+//        if (serverClient.getImgSocket() != null) {
+////            serverClient.getImgOutputStream().write(sendSize);
+////            serverClient.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
+////            serverClient.getImgOutputStream().flush();
 //            serverClient.getImgOutputStream().flush();
-            serverClient.getImgOutputStream().flush();
-        }
-        if (client.getImgSocket() != null) {
-//            client.getImgOutputStream().write(sendSize);
-//            client.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
-            client.getImgOutputStream().flush();
-            System.out.println("done");
-        }
-        if (client2.getImgSocket() != null) {
-//            client2.getImgOutputStream().write(sendSize);
-//            client2.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
-            client2.getImgOutputStream().flush();
-        }
-        if (client3.getImgSocket() != null) {
-//            client3.getImgOutputStream().write(sendSize);
-//            client3.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
-            client3.getImgOutputStream().flush();
-        }
+//        }
+//        if (client.getImgSocket() != null) {
+////            client.getImgOutputStream().write(sendSize);
+////            client.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
+//            client.getImgOutputStream().flush();
+//            System.out.println("done");
+//        }
+//        if (client2.getImgSocket() != null) {
+////            client2.getImgOutputStream().write(sendSize);
+////            client2.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
+//            client2.getImgOutputStream().flush();
+//        }
+//        if (client3.getImgSocket() != null) {
+////            client3.getImgOutputStream().write(sendSize);
+////            client3.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
+//            client3.getImgOutputStream().flush();
+//        }
     }
 }

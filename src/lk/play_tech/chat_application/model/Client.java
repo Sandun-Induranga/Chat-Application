@@ -43,8 +43,6 @@ public class Client {
     public void setInputAndOutput() throws IOException {
         this.dataInputStream = new DataInputStream(accept.getInputStream());
         this.dataOutputStream = new DataOutputStream(accept.getOutputStream());
-        this.imgInputStream = (ImageInputStream) accept.getInputStream();
-        this.imgOutputStream = (ImageInputStream) accept.getOutputStream();
     }
 
     public void setImageInputAndOutput() throws IOException {

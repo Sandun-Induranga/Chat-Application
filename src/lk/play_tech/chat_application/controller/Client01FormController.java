@@ -60,8 +60,6 @@ public class Client01FormController {
         new Thread(() -> {
             try {
                 socket = new Socket("localhost", PORT);
-                imgOutputStream = (ImageOutputStream) socket.getOutputStream();
-                imgInputStream = (ImageInputStream) socket.getInputStream();
                 while (true) {
                     dataOutputStream = new DataOutputStream(socket.getOutputStream());
                     dataInputStream = new DataInputStream(socket.getInputStream());
@@ -175,9 +173,9 @@ public class Client01FormController {
         ImageIO.write(image, "jpg", byteArrayOutputStream);
 
         byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-        imgOutputStream.write(size);
-        imgOutputStream.write(byteArrayOutputStream.toByteArray());
-        imgOutputStream.flush();
+        dataOutputStream.write(size);
+        dataOutputStream.write(byteArrayOutputStream.toByteArray());
+        dataOutputStream.flush();
         System.out.println("Flushed: " + System.currentTimeMillis());
         System.out.println("Closing: " + System.currentTimeMillis());
     }
