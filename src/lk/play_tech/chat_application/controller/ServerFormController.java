@@ -194,10 +194,18 @@ public class ServerFormController {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            Label label = new Label(message);
-                            label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #CDB4DB; -fx-text-fill: #5c5c5c");
-                            label.setLayoutY(i);
-                            context.getChildren().add(label);
+                            if (message.startsWith("Admin")){
+                                message = message.replace("Admin","You");
+                                Label label = new Label(message);
+                                label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #85b6ff; -fx-text-fill: #5c5c5c");
+                                label.setLayoutY(i);
+                                context.getChildren().add(label);
+                            }else {
+                                Label label = new Label(message);
+                                label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #CDB4DB; -fx-text-fill: #5c5c5c");
+                                label.setLayoutY(i);
+                                context.getChildren().add(label);
+                            }
                             i += 30;
                         }
                     });
@@ -209,7 +217,7 @@ public class ServerFormController {
     }
 
     public void btnSendOnAction(MouseEvent actionEvent) throws IOException {
-        dataOutputStream0.writeUTF(txtMessage.getText().trim());
+        dataOutputStream0.writeUTF("Admin : " + txtMessage.getText().trim());
         dataOutputStream0.flush();
         txtMessage.clear();
     }

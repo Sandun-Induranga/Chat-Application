@@ -146,6 +146,7 @@ public class Client01FormController {
 ////        }
         dataOutputStream.writeUTF(lblClient.getText() + " : " + txtMessage.getText().trim());
         dataOutputStream.flush();
+        txtMessage.clear();
     }
 
     public void btnImageChooserOnAction(ActionEvent actionEvent) throws IOException {
