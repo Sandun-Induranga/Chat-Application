@@ -24,11 +24,16 @@
                     <font>
                         <Font name="Ubuntu" size="20.0" />
                     </font></TextField>
-                <FontAwesomeIconView fill="#85b6ff" glyphName="SEND" layoutX="310.0" layoutY="32.0" onMouseClicked="#btnSendOnAction" size="25">
+                <FontAwesomeIconView fill="#85b6ff" glyphName="SEND" layoutX="310.0" layoutY="31.0" onMouseClicked="#btnSendOnAction" size="25">
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor></FontAwesomeIconView>
                 <FontAwesomeIconView fill="#85b6ff" glyphName="HEART" layoutX="11.0" layoutY="31.0" onMouseClicked="#btnEmojiOnAction" size="25">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </FontAwesomeIconView>
+                <FontAwesomeIconView fill="#85b6ff" glyphName="CAMERA" layoutX="271.0" layoutY="31.0" onMouseClicked="#btnSendOnAction" size="25">
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
