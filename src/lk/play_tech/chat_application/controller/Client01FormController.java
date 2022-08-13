@@ -69,13 +69,13 @@ public class Client01FormController {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            if (message.startsWith(LoginForm01Controller.name)){
-                                message = message.replace(LoginForm01Controller.name,"You");
+                            if (message.startsWith(LoginForm01Controller.name)) {
+                                message = message.replace(LoginForm01Controller.name, "You");
                                 Label label = new Label(message);
                                 label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #85b6ff; -fx-text-fill: #5c5c5c");
                                 label.setLayoutY(i);
                                 context.getChildren().add(label);
-                            }else {
+                            } else {
                                 Label label = new Label(message);
                                 label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #CDB4DB; -fx-text-fill: #5c5c5c");
                                 label.setLayoutY(i);
@@ -165,7 +165,7 @@ public class Client01FormController {
     }
 
     public void btnExitOnAction(MouseEvent actionEvent) throws IOException {
-        if (socket!=null){
+        if (socket != null) {
             dataOutputStream.writeUTF("exit".trim());
             dataOutputStream.flush();
             System.exit(0);
@@ -205,7 +205,7 @@ public class Client01FormController {
         heart.setFitWidth(30);
         heart.setFitHeight(30);
         dialogVbox.getChildren().add(heart);
-        ImageView sadFace = new ImageView(new Image("lk/play_tech/chat_application/assets/sad-face.jpeg"));
+        ImageView sadFace = new ImageView(new Image("lk/play_tech/chat_application/assets/sad-face.png"));
         sadFace.setFitWidth(30);
         sadFace.setFitHeight(30);
         dialogVbox.getChildren().add(sadFace);

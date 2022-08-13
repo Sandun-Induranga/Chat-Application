@@ -201,7 +201,7 @@ public class Client02FormController {
         heart.setFitWidth(30);
         heart.setFitHeight(30);
         dialogVbox.getChildren().add(heart);
-        ImageView sadFace = new ImageView(new Image("lk/play_tech/chat_application/assets/sad-face.jpeg"));
+        ImageView sadFace = new ImageView(new Image("lk/play_tech/chat_application/assets/sad-face.png"));
         sadFace.setFitWidth(30);
         sadFace.setFitHeight(30);
         dialogVbox.getChildren().add(sadFace);
