@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import lk.play_tech.chat_application.model.Client;
 
 import javax.imageio.ImageIO;
@@ -28,6 +29,7 @@ public class ServerFormController {
     final static int PORT1 = 50000;
     final int PORT2 = 60000;
     final int PORT3 = 65000;
+    public AnchorPane emoji;
     Socket socket;
     DataInputStream dataInputStream0;
     DataOutputStream dataOutputStream0;
@@ -40,6 +42,7 @@ public class ServerFormController {
     Client client;
     Client client2;
     Client client3;
+    boolean isUsed = false;
 //    https://www.codegrepper.com/code-examples/java/java+send+an+image+over+a+socket
 
     public void initialize() {
@@ -232,17 +235,6 @@ public class ServerFormController {
     }
 
     public void processTextMessage(Client client, DataInputStream dataInputStream) throws IOException {
-//        Platform.runLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                Label label = new Label(client.getName()+" Joined");
-//                label.setStyle("-fx-font-family: Ubuntu; -fx-font-size: 20px;");
-//                label.setLayoutY(i);
-//                label.setLayoutX(50);
-//                context.getChildren().add(label);
-//                i += 30;
-//            }
-//        });
         if (dataOutputStream0 != null) {
             dataOutputStream0.writeUTF("👋\t\t\t" + client.getName() + "  Joined\t\t\t👋".trim());
             dataOutputStream0.flush();
@@ -329,5 +321,37 @@ public class ServerFormController {
 ////            client3.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
 //            client3.getImgOutputStream().flush();
 //        }
+    }
+
+    public void btnEmojiOnAction(MouseEvent mouseEvent) {
+        if (isUsed) {
+            emoji.getChildren().clear();
+            isUsed = false;
+            return;
+        }
+        isUsed = true;
+        VBox dialogVbox = new VBox(20);
+        ImageView smile = new ImageView(new Image("lk/play_tech/chat_application/assets/smile.png"));
+        smile.setFitWidth(30);
+        smile.setFitHeight(30);
+        dialogVbox.getChildren().add(smile);
+        ImageView heart = new ImageView(new Image("lk/play_tech/chat_application/assets/heart.png"));
+        heart.setFitWidth(30);
+        heart.setFitHeight(30);
+        dialogVbox.getChildren().add(heart);
+        ImageView sadFace = new ImageView(new Image("lk/play_tech/chat_application/assets/sad-face.png"));
+        sadFace.setFitWidth(30);
+        sadFace.setFitHeight(30);
+        dialogVbox.getChildren().add(sadFace);
+        smile.setOnMouseClicked(event -> {
+            txtMessage.setText(txtMessage.getText() + "☺");
+        });
+        heart.setOnMouseClicked(event -> {
+            txtMessage.setText(txtMessage.getText() + "♥");
+        });
+        sadFace.setOnMouseClicked(event -> {
+            txtMessage.setText(txtMessage.getText() + "☹");
+        });
+        emoji.getChildren().add(dialogVbox);
     }
 }
