@@ -154,11 +154,11 @@ public class Client01FormController {
 ////        }else {
 ////
 ////        }
-        if (isImageChoose){
+        if (isImageChoose) {
             dataOutputStream.writeUTF(path.trim());
             dataOutputStream.flush();
             isImageChoose = false;
-        }else {
+        } else {
             dataOutputStream.writeUTF(lblClient.getText() + " : " + txtMessage.getText().trim());
             dataOutputStream.flush();
         }

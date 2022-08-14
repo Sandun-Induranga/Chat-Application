@@ -80,13 +80,13 @@ public class Client02FormController {
                                 context.getChildren().add(imageView);
                                 i += 120;
 
-                            }else if (message.startsWith(LoginForm02Controller.name)){
-                                message = message.replace(LoginForm02Controller.name,"You");
+                            } else if (message.startsWith(LoginForm02Controller.name)) {
+                                message = message.replace(LoginForm02Controller.name, "You");
                                 Label label = new Label(message);
                                 label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #85b6ff; -fx-text-fill: #5c5c5c");
                                 label.setLayoutY(i);
                                 context.getChildren().add(label);
-                            }else {
+                            } else {
                                 Label label = new Label(message);
                                 label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #CDB4DB; -fx-text-fill: #5c5c5c");
                                 label.setLayoutY(i);
@@ -154,11 +154,11 @@ public class Client02FormController {
 ////        }else {
 ////
 ////        }
-        if (isImageChoose){
+        if (isImageChoose) {
             dataOutputStream.writeUTF(path.trim());
             dataOutputStream.flush();
             isImageChoose = false;
-        }else {
+        } else {
             dataOutputStream.writeUTF(lblClient.getText() + " : " + txtMessage.getText().trim());
             dataOutputStream.flush();
         }
@@ -181,7 +181,7 @@ public class Client02FormController {
     }
 
     public void btnExitOnAction(MouseEvent actionEvent) throws IOException {
-        if (socket!=null){
+        if (socket != null) {
             dataOutputStream.writeUTF("exit".trim());
             dataOutputStream.flush();
             System.exit(0);
