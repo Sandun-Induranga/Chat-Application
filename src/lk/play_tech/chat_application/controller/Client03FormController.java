@@ -198,6 +198,12 @@ public class Client03FormController {
 //        System.out.println("Closing: " + System.currentTimeMillis());
         dataOutputStream.writeUTF(path.trim());
         dataOutputStream.flush();
+        if (isImageChoose){
+            dataOutputStream.writeUTF(message.trim());
+            dataOutputStream.flush();
+            isImageChoose = false;
+        }
+        txtMessage.clear();
     }
 
     public void btnEmojiOnAction(MouseEvent mouseEvent) {
