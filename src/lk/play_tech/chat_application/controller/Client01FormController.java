@@ -3,8 +3,6 @@ package lk.play_tech.chat_application.controller;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -13,9 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
@@ -24,7 +20,6 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 
 public class Client01FormController {
     public ScrollPane msgContext;
@@ -162,14 +157,14 @@ public class Client01FormController {
         dataOutputStream.writeUTF(lblClient.getText() + " : " + txtMessage.getText().trim());
         dataOutputStream.flush();
         if (isImageChoose){
-            dataOutputStream.writeUTF(message.trim());
+            dataOutputStream.writeUTF(path.trim());
             dataOutputStream.flush();
             isImageChoose = false;
         }
         txtMessage.clear();
     }
 
-    public void btnImageChooserOnAction(ActionEvent actionEvent) throws IOException {
+    public void btnImageChooserOnAction(MouseEvent actionEvent) throws IOException {
         // get the file selected
         FileChooser chooser = new FileChooser();
         Stage stage = new Stage();
