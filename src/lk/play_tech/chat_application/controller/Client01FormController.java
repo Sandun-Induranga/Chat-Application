@@ -69,7 +69,22 @@ public class Client01FormController {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            if (message.startsWith(LoginForm01Controller.name)) {
+                            if (message.startsWith("/")) {
+                                BufferedImage sendImage = null;
+                                try {
+                                    sendImage = ImageIO.read(new File(message));
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                Image img = SwingFXUtils.toFXImage(sendImage, null);
+                                ImageView imageView = new ImageView(img);
+                                imageView.setFitHeight(150);
+                                imageView.setFitWidth(150);
+                                imageView.setLayoutY(100);
+                                context.getChildren().add(imageView);
+                                i += 120;
+
+                            } else if (message.startsWith(LoginForm01Controller.name)) {
                                 message = message.replace(LoginForm01Controller.name, "You");
                                 Label label = new Label(message);
                                 label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #85b6ff; -fx-text-fill: #5c5c5c");
@@ -161,6 +176,8 @@ public class Client01FormController {
             System.out.println("selected");
             System.out.println(file.getPath());
             isImageChoose = true;
+            dataOutputStream.writeUTF(file.getPath().trim());
+            dataOutputStream.flush();
         }
     }
 

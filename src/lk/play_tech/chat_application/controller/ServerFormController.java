@@ -197,13 +197,28 @@ public class ServerFormController {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            if (message.startsWith("Admin")){
-                                message = message.replace("Admin","You");
+                            if (message.startsWith("/")) {
+                                BufferedImage sendImage = null;
+                                try {
+                                    sendImage = ImageIO.read(new File(message));
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                Image img = SwingFXUtils.toFXImage(sendImage, null);
+                                ImageView imageView = new ImageView(img);
+                                imageView.setFitHeight(150);
+                                imageView.setFitWidth(150);
+                                imageView.setLayoutY(100);
+                                context.getChildren().add(imageView);
+                                i += 120;
+                            }
+                            if (message.startsWith("Admin")) {
+                                message = message.replace("Admin", "You");
                                 Label label = new Label(message);
                                 label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #85b6ff; -fx-text-fill: #5c5c5c");
                                 label.setLayoutY(i);
                                 context.getChildren().add(label);
-                            }else {
+                            } else {
                                 Label label = new Label(message);
                                 label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #CDB4DB; -fx-text-fill: #5c5c5c");
                                 label.setLayoutY(i);
@@ -274,28 +289,15 @@ public class ServerFormController {
         }
     }
 
-    private void processImage(DataInputStream inputStream) throws IOException {
+    private void processImage(String path) throws IOException {
         System.out.println("come");
-        byte[] sizeAr = new byte[4];
-        inputStream.read(sizeAr);
-        int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
-        byte[] imageAr = new byte[size];
-        inputStream.read(imageAr);
-        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
+        BufferedImage sendImage = ImageIO.read(new File(path));
 
-        System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
-        ImageIO.write(image, "jpg", new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
-
-        BufferedImage sendImage = ImageIO.read(new File("/media/sandu/0559F5C021740317/GDSE/Project_Zone/IdeaProjects/INP_Course_Work/src/lk/play_tech/chat_application/bo/test.jpg"));
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ImageIO.write(sendImage, "jpg", byteArrayOutputStream);
-
-        byte[] sendSize = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-        sendImgMessage(sendSize, byteArrayOutputStream);
-        System.out.println("Flushed: " + System.currentTimeMillis());
-        System.out.println("Closing: " + System.currentTimeMillis());
-        sendImgMessage(sendSize, byteArrayOutputStream);
+//        byte[] sendSize = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+//        sendImgMessage(sendSize, byteArrayOutputStream);
+//        System.out.println("Flushed: " + System.currentTimeMillis());
+//        System.out.println("Closing: " + System.currentTimeMillis());
+        sendTextMessage(path);
     }
 
     private void sendImgMessage(byte[] sendSize, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
