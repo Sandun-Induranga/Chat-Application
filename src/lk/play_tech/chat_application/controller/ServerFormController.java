@@ -211,8 +211,7 @@ public class ServerFormController {
                                 imageView.setLayoutY(100);
                                 context.getChildren().add(imageView);
                                 i += 120;
-                            }
-                            if (message.startsWith("Admin")) {
+                            }else if (message.startsWith("Admin")) {
                                 message = message.replace("Admin", "You");
                                 Label label = new Label(message);
                                 label.setStyle(" -fx-font-family: Ubuntu; -fx-font-size: 20px; -fx-background-color: #85b6ff; -fx-text-fill: #5c5c5c");
