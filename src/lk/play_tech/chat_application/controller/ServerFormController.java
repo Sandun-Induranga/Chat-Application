@@ -208,7 +208,7 @@ public class ServerFormController {
                                 ImageView imageView = new ImageView(img);
                                 imageView.setFitHeight(150);
                                 imageView.setFitWidth(150);
-                                imageView.setLayoutY(100);
+                                imageView.setLayoutY(i);
                                 context.getChildren().add(imageView);
                                 i += 120;
                             }else if (message.startsWith("Admin")) {

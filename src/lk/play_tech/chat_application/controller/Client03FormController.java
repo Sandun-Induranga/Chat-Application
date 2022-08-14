@@ -75,7 +75,7 @@ public class Client03FormController {
                                 ImageView imageView = new ImageView(img);
                                 imageView.setFitHeight(150);
                                 imageView.setFitWidth(150);
-                                imageView.setLayoutY(100);
+                                imageView.setLayoutY(i);
                                 context.getChildren().add(imageView);
                                 i += 120;
 
@@ -185,17 +185,19 @@ public class Client03FormController {
 
     public void btnOnAction(ActionEvent actionEvent) throws IOException {
 
-        BufferedImage image = ImageIO.read(new File(path));
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ImageIO.write(image, "jpg", byteArrayOutputStream);
-
-        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-        imgOutputStream.write(size);
-        imgOutputStream.write(byteArrayOutputStream.toByteArray());
-        imgOutputStream.flush();
-        System.out.println("Flushed: " + System.currentTimeMillis());
-        System.out.println("Closing: " + System.currentTimeMillis());
+//        BufferedImage image = ImageIO.read(new File(path));
+//
+//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//        ImageIO.write(image, "jpg", byteArrayOutputStream);
+//
+//        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+//        imgOutputStream.write(size);
+//        imgOutputStream.write(byteArrayOutputStream.toByteArray());
+//        imgOutputStream.flush();
+//        System.out.println("Flushed: " + System.currentTimeMillis());
+//        System.out.println("Closing: " + System.currentTimeMillis());
+        dataOutputStream.writeUTF(path.trim());
+        dataOutputStream.flush();
     }
 
     public void btnEmojiOnAction(MouseEvent mouseEvent) {
