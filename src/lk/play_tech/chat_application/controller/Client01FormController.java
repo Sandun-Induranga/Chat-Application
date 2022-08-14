@@ -77,7 +77,7 @@ public class Client01FormController {
                                 imageView.setFitWidth(150);
                                 imageView.setLayoutY(i);
                                 context.getChildren().add(imageView);
-                                i += 120;
+                                i += 150;
 
                             } else if (message.startsWith(LoginForm01Controller.name)) {
                                 message = message.replace(LoginForm01Controller.name, "You");
@@ -154,12 +154,13 @@ public class Client01FormController {
 ////        }else {
 ////
 ////        }
-        dataOutputStream.writeUTF(lblClient.getText() + " : " + txtMessage.getText().trim());
-        dataOutputStream.flush();
         if (isImageChoose){
             dataOutputStream.writeUTF(path.trim());
             dataOutputStream.flush();
             isImageChoose = false;
+        }else {
+            dataOutputStream.writeUTF(lblClient.getText() + " : " + txtMessage.getText().trim());
+            dataOutputStream.flush();
         }
         txtMessage.clear();
     }

@@ -2,7 +2,6 @@ package lk.play_tech.chat_application.controller;
 
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -11,6 +10,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import lk.play_tech.chat_application.model.Client;
 
 import javax.imageio.ImageIO;
@@ -19,7 +20,6 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 
 public class ServerFormController {
     public ScrollPane msgContext;
@@ -43,6 +43,8 @@ public class ServerFormController {
     Client client2;
     Client client3;
     boolean isUsed = false;
+    boolean isImageChoose = false;
+    String path = "";
 //    https://www.codegrepper.com/code-examples/java/java+send+an+image+over+a+socket
 
     public void initialize() {
@@ -234,12 +236,29 @@ public class ServerFormController {
     }
 
     public void btnSendOnAction(MouseEvent actionEvent) throws IOException {
-        dataOutputStream0.writeUTF("Admin : " + txtMessage.getText().trim());
-        dataOutputStream0.flush();
+        if (isImageChoose){
+            dataOutputStream0.writeUTF(path.trim());
+            dataOutputStream0.flush();
+            isImageChoose = false;
+        }else {
+            dataOutputStream0.writeUTF("Admin : " + txtMessage.getText().trim());
+            dataOutputStream0.flush();
+        }
         txtMessage.clear();
     }
 
-    public void btnImageChooserOnAction(ActionEvent actionEvent) {
+    public void btnImageChooserOnAction(MouseEvent actionEvent) {
+        FileChooser chooser = new FileChooser();
+        Stage stage = new Stage();
+        File file = chooser.showOpenDialog(stage);
+
+        if (file != null) {
+//            dataOutputStream.writeUTF(file.getPath());
+            path = file.getPath();
+            System.out.println("selected");
+            System.out.println(file.getPath());
+            isImageChoose = true;
+        }
     }
 
     public void btnExitOnAction(MouseEvent actionEvent) throws IOException {
