@@ -18,7 +18,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 
 public class Client03FormController {
     public ScrollPane msgContext;
@@ -153,12 +152,18 @@ public class Client03FormController {
 ////        }else {
 ////
 ////        }
-        dataOutputStream.writeUTF(lblClient.getText() + " : " + txtMessage.getText().trim());
-        dataOutputStream.flush();
+        if (isImageChoose){
+            dataOutputStream.writeUTF(path.trim());
+            dataOutputStream.flush();
+            isImageChoose = false;
+        }else {
+            dataOutputStream.writeUTF(lblClient.getText() + " : " + txtMessage.getText().trim());
+            dataOutputStream.flush();
+        }
         txtMessage.clear();
     }
 
-    public void btnImageChooserOnAction(ActionEvent actionEvent) throws IOException {
+    public void btnImageChooserOnAction(MouseEvent actionEvent) throws IOException {
         // get the file selected
         FileChooser chooser = new FileChooser();
         Stage stage = new Stage();
@@ -196,15 +201,6 @@ public class Client03FormController {
 //        imgOutputStream.flush();
 //        System.out.println("Flushed: " + System.currentTimeMillis());
 //        System.out.println("Closing: " + System.currentTimeMillis());
-        if (isImageChoose){
-            dataOutputStream.writeUTF(path.trim());
-            dataOutputStream.flush();
-            isImageChoose = false;
-        }else {
-            dataOutputStream.writeUTF(lblClient.getText() + " : " + txtMessage.getText().trim());
-            dataOutputStream.flush();
-        }
-        txtMessage.clear();
     }
 
     public void btnEmojiOnAction(MouseEvent mouseEvent) {

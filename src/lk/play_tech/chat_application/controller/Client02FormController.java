@@ -18,7 +18,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 
 public class Client02FormController {
     public ScrollPane msgContext;
@@ -166,7 +165,7 @@ public class Client02FormController {
         txtMessage.clear();
     }
 
-    public void btnImageChooserOnAction(ActionEvent actionEvent) throws IOException {
+    public void btnImageChooserOnAction(MouseEvent actionEvent) throws IOException {
         // get the file selected
         FileChooser chooser = new FileChooser();
         Stage stage = new Stage();

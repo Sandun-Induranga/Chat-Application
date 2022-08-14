@@ -16,7 +16,6 @@
             <font>
                 <Font name="Ubuntu Bold" size="30.0" />
             </font></Label>
-        <Button layoutX="212.0" layoutY="658.0" mnemonicParsing="false" onAction="#btnImageChooserOnAction" text="Send" />
         <Button layoutX="280.0" layoutY="671.0" mnemonicParsing="false" onAction="#btnOnAction" text="Button" />
         <AnchorPane layoutX="25.0" layoutY="580.0" opacity="0.7" prefHeight="44.0" prefWidth="350.0" style="-fx-background-color: white; -fx-background-radius: 20;" AnchorPane.bottomAnchor="106.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="580.0">
             <children>
@@ -33,7 +32,7 @@
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </FontAwesomeIconView>
-                <FontAwesomeIconView fill="#85b6ff" glyphName="CAMERA" layoutX="271.0" layoutY="31.0" onMouseClicked="#btnSendOnAction" size="25">
+                <FontAwesomeIconView fill="#85b6ff" glyphName="CAMERA" layoutX="271.0" layoutY="31.0" onMouseClicked="#btnImageChooserOnAction" size="25">
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
