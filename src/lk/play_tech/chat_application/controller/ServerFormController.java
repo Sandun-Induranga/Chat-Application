@@ -212,6 +212,12 @@ public class ServerFormController {
                                 imageView.setLayoutY(i);
                                 context.getChildren().add(imageView);
                                 i += 120;
+                                try {
+                                    dataOutputStream0.writeUTF("Admin");
+                                    dataOutputStream0.flush();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }else if (message.startsWith("Admin")) {
                                 message = message.replace("Admin", "You");
                                 Label label = new Label(message);

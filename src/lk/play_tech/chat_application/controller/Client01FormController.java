@@ -77,7 +77,13 @@ public class Client01FormController {
                                 imageView.setFitWidth(150);
                                 imageView.setLayoutY(i);
                                 context.getChildren().add(imageView);
-                                i += 150;
+                                try {
+                                    dataOutputStream.writeUTF(lblClient.getText());
+                                    dataOutputStream.flush();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                i += 120;
 
                             } else if (message.startsWith(LoginForm01Controller.name)) {
                                 message = message.replace(LoginForm01Controller.name, "You");
