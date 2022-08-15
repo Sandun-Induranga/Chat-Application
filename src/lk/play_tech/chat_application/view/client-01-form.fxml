@@ -2,7 +2,6 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -16,8 +15,6 @@
          <font>
             <Font name="Ubuntu Bold" size="30.0" />
          </font></Label>
-      <Button layoutX="212.0" layoutY="658.0" mnemonicParsing="false" onAction="#btnImageChooserOnAction" text="Send" />
-      <Button layoutX="280.0" layoutY="671.0" mnemonicParsing="false" onAction="#btnOnAction" text="Button" />
       <AnchorPane layoutX="25.0" layoutY="580.0" opacity="0.7" prefHeight="44.0" prefWidth="350.0" style="-fx-background-color: white; -fx-background-radius: 20;" AnchorPane.bottomAnchor="106.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="580.0">
          <children>
             <TextField fx:id="txtMessage" layoutX="45.0" prefHeight="44.0" prefWidth="231.0" promptText="Type Here..." style="-fx-background-color: transparent;" styleClass="text-field">

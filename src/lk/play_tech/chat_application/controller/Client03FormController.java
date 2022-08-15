@@ -187,22 +187,6 @@ public class Client03FormController {
         System.exit(0);
     }
 
-
-    public void btnOnAction(ActionEvent actionEvent) throws IOException {
-
-//        BufferedImage image = ImageIO.read(new File(path));
-//
-//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//        ImageIO.write(image, "jpg", byteArrayOutputStream);
-//
-//        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-//        imgOutputStream.write(size);
-//        imgOutputStream.write(byteArrayOutputStream.toByteArray());
-//        imgOutputStream.flush();
-//        System.out.println("Flushed: " + System.currentTimeMillis());
-//        System.out.println("Closing: " + System.currentTimeMillis());
-    }
-
     public void btnEmojiOnAction(MouseEvent mouseEvent) {
         if (isUsed) {
             emoji.getChildren().clear();

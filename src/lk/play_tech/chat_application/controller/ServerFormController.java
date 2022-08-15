@@ -125,8 +125,7 @@ public class ServerFormController {
                     client2.acceptConnection();
                     client2.setInputAndOutput();
                     processTextMessage(client2, client2.getDataInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException ignored) {
                 }
             }
         }).start();
