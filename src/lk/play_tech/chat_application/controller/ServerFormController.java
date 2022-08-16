@@ -20,6 +20,7 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 public class ServerFormController {
     public ScrollPane msgContext;
@@ -143,7 +144,7 @@ public class ServerFormController {
         }).start();
 //        new Thread(() -> {
 //            try {
-//                serverClient.acceptImgConnection(PORT + 1);
+//                serverClient.acceptImgConnection(PORT + 5);
 //                serverClient.setImageInputAndOutput();
 //                processImage(serverClient.getImgInputStream());
 //            } catch (IOException e) {
@@ -152,7 +153,7 @@ public class ServerFormController {
 //        }).start();
 //        new Thread(() -> {
 //            try {
-//                client.acceptImgConnection(PORT1 + 1);
+//                client.acceptImgConnection(PORT1 + 5);
 //                client.setImageInputAndOutput();
 //                processImage(client.getImgInputStream());
 //            } catch (IOException e) {
@@ -306,41 +307,42 @@ public class ServerFormController {
         }
     }
 
-    private void processImage(String path) throws IOException {
-        System.out.println("come");
-        BufferedImage sendImage = ImageIO.read(new File(path));
-
+//    private void processImage(InputStream inputStream) throws IOException {
+//        System.out.println("come");
+////        BufferedImage sendImage = ImageIO.read(new File(path));
+//
+//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 //        byte[] sendSize = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
 //        sendImgMessage(sendSize, byteArrayOutputStream);
 //        System.out.println("Flushed: " + System.currentTimeMillis());
 //        System.out.println("Closing: " + System.currentTimeMillis());
-        sendTextMessage(path);
-    }
+////        sendTextMessage(path);
+//        sendImgMessage(sendSize,byteArrayOutputStream);
+//    }
 
-    private void sendImgMessage(byte[] sendSize, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
+//    private void sendImgMessage(byte[] sendSize, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
 //        if (serverClient.getImgSocket() != null) {
-////            serverClient.getImgOutputStream().write(sendSize);
-////            serverClient.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
-////            serverClient.getImgOutputStream().flush();
+//            serverClient.getImgOutputStream().write(sendSize);
+//            serverClient.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
 //            serverClient.getImgOutputStream().flush();
 //        }
 //        if (client.getImgSocket() != null) {
-////            client.getImgOutputStream().write(sendSize);
-////            client.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
+//            client.getImgOutputStream().write(sendSize);
+//            client.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
 //            client.getImgOutputStream().flush();
 //            System.out.println("done");
 //        }
 //        if (client2.getImgSocket() != null) {
-////            client2.getImgOutputStream().write(sendSize);
-////            client2.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
+//            client2.getImgOutputStream().write(sendSize);
+//            client2.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
 //            client2.getImgOutputStream().flush();
 //        }
 //        if (client3.getImgSocket() != null) {
-////            client3.getImgOutputStream().write(sendSize);
-////            client3.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
+//            client3.getImgOutputStream().write(sendSize);
+//            client3.getImgOutputStream().write(byteArrayOutputStream.toByteArray());
 //            client3.getImgOutputStream().flush();
 //        }
-    }
+//    }
 
     public void btnEmojiOnAction(MouseEvent mouseEvent) {
         if (isUsed) {

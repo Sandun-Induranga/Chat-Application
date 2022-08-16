@@ -22,8 +22,8 @@ public class Client {
     private Socket imgSocket;
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
-    private ImageInputStream imgInputStream;
-    private ImageInputStream imgOutputStream;
+    private InputStream imgInputStream;
+    private OutputStream imgOutputStream;
     private String message = "";
 
     public Client(int port) {
@@ -46,8 +46,8 @@ public class Client {
     }
 
     public void setImageInputAndOutput() throws IOException {
-        this.imgInputStream = (ImageInputStream) imgSocket.getInputStream();
-        this.imgOutputStream = (ImageInputStream) imgSocket.getOutputStream();
+        this.imgInputStream = imgSocket.getInputStream();
+        this.imgOutputStream = imgSocket.getOutputStream();
     }
 
     public void processTextMessage() throws IOException {

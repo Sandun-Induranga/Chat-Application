@@ -3,6 +3,7 @@ package lk.play_tech.chat_application.controller;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -20,6 +21,8 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class Client01FormController {
     public ScrollPane msgContext;
@@ -40,8 +43,8 @@ public class Client01FormController {
     ObjectOutputStream oos;
     ObjectInputStream ois;
     File file;
-    ImageOutputStream imgOutputStream;
-    ImageInputStream imgInputStream;
+    OutputStream imgOutputStream;
+    InputStream imgInputStream;
     boolean isUsed = false;
 
     public void initialize() {
@@ -99,9 +102,17 @@ public class Client01FormController {
             }
         }).start();
 
+        txtMessage.setOnAction(event -> {
+            try {
+                sendMessage();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
 //        new Thread(() -> {
 //            try {
-//                imgSocket = new Socket("localhost", PORT + 1);
+//                imgSocket = new Socket("localhost", PORT + 5);
 //                while (true) {
 //                    imgOutputStream = imgSocket.getOutputStream();
 //                    imgInputStream = imgSocket.getInputStream();
@@ -153,6 +164,10 @@ public class Client01FormController {
 ////        }else {
 ////
 ////        }
+        sendMessage();
+    }
+
+    private void sendMessage() throws IOException {
         if (isImageChoose) {
             dataOutputStream.writeUTF(path.trim());
             dataOutputStream.flush();
