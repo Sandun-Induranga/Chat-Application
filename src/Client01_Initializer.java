@@ -18,6 +18,6 @@ public class Client01_Initializer extends Application {
         primaryStage.setScene(new Scene(FXMLLoader.load(getClass().getResource("lk/play_tech/chat_application/view/login-form-01.fxml"))));
 //        primaryStage.initStyle(StageStyle.UTILITY);
         primaryStage.setAlwaysOnTop(true);
-        primaryStage.show();
+        primaryStage.show(); 
     }
 }
